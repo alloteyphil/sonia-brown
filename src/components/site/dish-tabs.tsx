@@ -18,12 +18,12 @@ export function DishTabs({ cuisines }: { cuisines: Cuisine[] }) {
         ))}
       </Tabs.List>
       {cuisines.map((c) => (
-        <Tabs.Content key={c.id} value={c.id} className="mt-8 focus-visible:outline-none">
+        <Tabs.Content key={c.id} value={c.id} className="dish-tabs-panel mt-8 focus-visible:outline-none">
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {c.dishes.map((d) => (
-              <li key={d.name} className="group overflow-hidden rounded-[var(--radius-card)] border border-horizon bg-white">
+              <li key={d.name} className="group overflow-hidden rounded-[var(--radius-card)] border border-horizon bg-white transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-24px_rgba(11,34,57,0.35)]">
                 <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image src={d.image} alt={d.alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition duration-500 group-hover:scale-[1.03]" />
+                  <Image src={d.image} alt={d.alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition duration-700 ease-out group-hover:scale-[1.06]" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-2xl">{d.name}</h3>

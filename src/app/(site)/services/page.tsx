@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getBusinessInfo, getServices } from "@/lib/server-data";
 import { CtaBand, SectionHeading, ServiceCard } from "@/components/site/sections";
 import { MenuTabs } from "@/components/site/menu-tabs";
+import { Reveal } from "@/components/site/reveal";
 import { sampleMenus } from "@/brand/content";
 import { formatMoney } from "@/lib/domain/money";
 
@@ -17,16 +18,22 @@ export default async function ServicesPage() {
     <>
       <section className="bg-gradient-to-b from-sky-mist to-cloud">
         <div className="mx-auto max-w-6xl px-4 pb-10 pt-16 sm:px-6">
-          <SectionHeading
-            eyebrow="Services"
-            title="Pick the table you're setting"
-            body={`Prices include ingredients, cooking, serving and cleanup. A ${info.depositPercent}% deposit holds your date.`}
-          />
+          <div className="hero-rise hero-rise-1">
+            <SectionHeading
+              eyebrow="Services"
+              title="Pick the table you're setting"
+              body={`Prices include ingredients, cooking, serving and cleanup. A ${info.depositPercent}% deposit holds your date.`}
+            />
+          </div>
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid gap-6 md:grid-cols-3">
-          {services.map((s) => <ServiceCard key={s.slug} service={s} />)}
+          {services.map((s, i) => (
+            <Reveal key={s.slug} delay={i}>
+              <ServiceCard service={s} />
+            </Reveal>
+          ))}
         </div>
 
         <div className="mt-10 overflow-x-auto rounded-[var(--radius-card)] border border-horizon bg-white">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { images } from "@/brand/images";
 import { CtaBand, Gallery, SectionHeading } from "@/components/site/sections";
+import { Reveal } from "@/components/site/reveal";
 
 export const metadata: Metadata = {
   title: "About Sonia",
@@ -18,10 +19,10 @@ export default function AboutPage() {
   return (
     <>
       <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-14 sm:px-6 md:grid-cols-[1fr_1.1fr]">
-        <div className="relative aspect-[5/6] overflow-hidden rounded-t-[999px] rounded-b-[2rem]">
-          <Image src={images.sonia.src} alt={images.sonia.alt} fill priority sizes="(min-width: 768px) 40vw, 100vw" className="object-cover" />
+        <div className="hero-frame relative aspect-[5/6] overflow-hidden rounded-t-[999px] rounded-b-[2rem]">
+          <Image src={images.sonia.src} alt={images.sonia.alt} fill priority sizes="(min-width: 768px) 40vw, 100vw" className="hero-photo object-cover" />
         </div>
-        <div>
+        <div className="hero-rise hero-rise-2">
           <SectionHeading eyebrow="About" title="Hi, I'm Sonia." />
           <div className="mt-6 space-y-4 text-lg text-muted">
             <p>I learned to cook beside my grandmother, measuring by eye and tasting everything. Food was how our family said welcome, congratulations and I&apos;m sorry.</p>
@@ -32,16 +33,18 @@ export default function AboutPage() {
       </section>
       <section className="mx-auto max-w-6xl px-4 pt-20 sm:px-6">
         <div className="grid gap-6 md:grid-cols-3">
-          {values.map((v) => (
-            <div key={v.title} className="rounded-[var(--radius-card)] bg-sky-mist/60 p-7">
+          {values.map((v, i) => (
+            <Reveal key={v.title} delay={i} className="rounded-[var(--radius-card)] bg-sky-mist/60 p-7">
               <h2 className="text-2xl">{v.title}</h2>
               <p className="mt-2 text-muted">{v.body}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-4 pt-20 sm:px-6">
-        <SectionHeading eyebrow="Gallery" title="Food I love to cook" />
+        <Reveal>
+          <SectionHeading eyebrow="Gallery" title="Food I love to cook" />
+        </Reveal>
         <Gallery />
       </section>
       <CtaBand />
