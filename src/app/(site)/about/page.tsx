@@ -5,7 +5,7 @@ import { CtaBand, Gallery, SectionHeading } from "@/components/site/sections";
 
 export const metadata: Metadata = {
   title: "About Sonia",
-  description: "Meet Sonia Brown, a private chef in Accra cooking modern Ghanaian and international food in your home.",
+  description: "Meet Sonia Brown, a private chef in Accra cooking Ghanaian classics, Southern soul food and international dishes in your home.",
 };
 
 const values = [
@@ -26,7 +26,7 @@ export default function AboutPage() {
           <div className="mt-6 space-y-4 text-lg text-muted">
             <p>I learned to cook beside my grandmother, measuring by eye and tasting everything. Food was how our family said welcome, congratulations and I&apos;m sorry.</p>
             <p>After years cooking in restaurant and hotel kitchens around Accra, I started cooking privately so I could do what I love most: get to know the people I&apos;m feeding.</p>
-            <p>My food is modern Ghanaian with a lot of curiosity: familiar flavours, beautifully plated, with a few surprises. Whether it&apos;s dinner for two or a naming ceremony for sixty, I&apos;ll make it feel effortless for you.</p>
+            <p>My food is Ghanaian at heart, with a big helping of Southern soul food and a lot of curiosity: familiar flavours, beautifully plated, with a few surprises. Whether it&apos;s dinner for two or a naming ceremony for sixty, I&apos;ll make it feel effortless for you.</p>
           </div>
         </div>
       </section>
@@ -41,7 +41,7 @@ export default function AboutPage() {
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-4 pt-20 sm:px-6">
-        <SectionHeading eyebrow="Gallery" title="From my kitchen" />
+        <SectionHeading eyebrow="Gallery" title="Food I love to cook" />
         <Gallery />
       </section>
       <CtaBand />

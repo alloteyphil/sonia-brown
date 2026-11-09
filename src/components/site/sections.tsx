@@ -4,7 +4,7 @@ import { ArrowRight, Clock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatMoney } from "@/lib/domain/money";
 import { serviceImage, images } from "@/brand/images";
-import { faqs, ghanaianDishes, howItWorks, type PublicService } from "@/brand/content";
+import { faqs, howItWorks, testimonials, type PublicService } from "@/brand/content";
 
 export function SectionHeading({
   eyebrow,
@@ -84,21 +84,27 @@ export function Gallery() {
   );
 }
 
-export function GhanaianDishes() {
+/** Client reviews. Renders nothing until real testimonials are added in content.ts. */
+export function Testimonials() {
+  if (testimonials.length === 0) return null;
   return (
-    <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {ghanaianDishes.map((d) => (
-        <li key={d.name} className="group overflow-hidden rounded-[var(--radius-card)] border border-horizon bg-white">
-          <div className="relative aspect-[4/3] overflow-hidden">
-            <Image src={d.image} alt={d.alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition duration-500 group-hover:scale-[1.03]" />
-          </div>
-          <div className="p-6">
-            <h3 className="text-2xl">{d.name}</h3>
-            <p className="mt-2 text-muted">{d.description}</p>
-          </div>
-        </li>
-      ))}
-    </ul>
+    <section className="bg-sky-mist/60 py-20" aria-labelledby="testimonials-title">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-harbour">Kind words</p>
+          <h2 id="testimonials-title" className="mt-3 text-4xl leading-[1.08] text-night-sky sm:text-5xl">From people I&apos;ve cooked for</h2>
+        </div>
+        <ul className="mt-12 grid gap-6 md:grid-cols-3">
+          {testimonials.map((t) => (
+            <li key={t.name + t.occasion} className="flex flex-col rounded-[var(--radius-card)] bg-white p-7 ring-1 ring-horizon">
+              <blockquote className="flex-1 font-display text-xl leading-snug text-night-sky">&ldquo;{t.quote}&rdquo;</blockquote>
+              <p className="mt-6 font-semibold">{t.name}</p>
+              <p className="text-sm text-muted">{t.occasion}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }
 

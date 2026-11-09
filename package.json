@@ -13,7 +13,8 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "seed": "convex run seed:run",
-    "codegen:offline": "node scripts/convex-codegen-offline.mjs"
+    "codegen:offline": "node scripts/convex-codegen-offline.mjs",
+    "photos": "node scripts/grade-photos.mjs"
   },
   "dependencies": {
     "@convex-dev/better-auth": "^0.13.0",
@@ -51,6 +52,7 @@
     "convex-test": "^0.0.67",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^5.1.0"

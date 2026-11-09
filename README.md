@@ -34,8 +34,16 @@ CSS variables in [`src/app/globals.css`](src/app/globals.css).
 - Tagline: *Cooked for you, at your table.*
 - Voice: first person from Sonia. Copy lives in [`src/brand/content.ts`](src/brand/content.ts).
 
-**Photos:** the site ships with sky-blue SVG placeholders. Drop real photos in
-`public/images/` and update paths in [`src/brand/images.ts`](src/brand/images.ts).
+**Photos:** the food photos are free stock images (Pexels/Unsplash licences,
+listed in [`assets/photos/CREDITS.md`](assets/photos/CREDITS.md)) standing in
+until Sonia's own are shot; fufu & light soup is AI-generated and the portrait is
+an SVG placeholder. Source photos live in `assets/photos/`; `npm run photos`
+([`scripts/grade-photos.mjs`](scripts/grade-photos.mjs)) crops each one to the
+shape it's shown at and applies one consistent grade (warm matte tone, fine
+grain, soft vignette) into `public/images/`. To swap a photo, replace the source
+(or add an entry to the script), run `npm run photos`, and update paths in
+[`src/brand/images.ts`](src/brand/images.ts) / [`src/brand/content.ts`](src/brand/content.ts)
+if they changed. [`assets/photos/SHOTLIST.md`](assets/photos/SHOTLIST.md) lists what to shoot.
 
 ---
 

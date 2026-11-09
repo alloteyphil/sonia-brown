@@ -1,23 +1,34 @@
 /**
- * Swap placeholders for real photos: drop a file in /public/images and change
- * the path here (e.g. "/images/hero.jpg"). Warm, natural light, close-up food
- * and hands cooking work best. Recommended sizes: hero 1600x1100, others 1200x900.
+ * Site photography: free stock photos (credited in assets/photos/CREDITS.md)
+ * until Sonia's own are shot. Source files live in assets/photos/ and are graded and
+ * cropped into /public/images by `npm run photos` (scripts/grade-photos.mjs),
+ * so every image shares one consistent look.
+ *
+ * To swap in a real photo: drop it in assets/photos/, point an entry in the
+ * script at it, run `npm run photos`, and update the path here if it changed.
+ * Warm, natural light, close-up food and hands cooking work best.
+ * Recommended source sizes: hero 1600x2000 (portrait), others 1600x1200.
  */
 export const images = {
-  hero: { src: "/images/hero-table.jpg", alt: "A dinner table set with jollof rice, grilled tilapia, kelewele, salad and sobolo" },
+  hero: { src: "/images/hero-jollof.jpg", alt: "Jollof rice with fried plantain on a white platter" },
   sonia: { src: "/images/sonia.svg", alt: "Portrait of Sonia Brown in her chef's whites" },
   services: {
-    "private-dinner": { src: "/images/private-dinner.svg", alt: "A plated private dinner course" },
-    "weekly-meal-prep": { src: "/images/meal-prep.svg", alt: "Labelled meal prep containers" },
-    "event-catering": { src: "/images/event-catering.svg", alt: "Platters set out for an event" },
+    "private-dinner": { src: "/images/service-dinner-table.jpg", alt: "A candlelit dinner table set with sharing plates" },
+    "weekly-meal-prep": { src: "/images/service-meal-prep-boxes.jpg", alt: "Stacked meal prep containers of rice, vegetables and chicken" },
+    "event-catering": { src: "/images/service-catering.jpg", alt: "Guests serving themselves from a buffet of chafing dishes" },
   } as Record<string, { src: string; alt: string }>,
+  // Laid out in 3 columns, top to bottom: keep each run of three as one tall + two squares
+  // so the columns end level, and keep similar shots apart.
   gallery: [
-    { src: "/images/dish-jollof.jpg", alt: "Jollof rice with grilled chicken and fried plantain", tall: false },
-    { src: "/images/dish-fufu-light-soup.jpg", alt: "Fufu in light soup with goat meat", tall: true },
-    { src: "/images/dish-kelewele.jpg", alt: "A bowl of spiced kelewele with roasted groundnuts", tall: false },
-    { src: "/images/dish-banku-tilapia.jpg", alt: "Banku with grilled tilapia and fresh pepper", tall: true },
-    { src: "/images/dish-waakye.jpg", alt: "A full plate of waakye with shito, gari and egg", tall: false },
-    { src: "/images/dish-red-red.jpg", alt: "Red red bean stew with fried plantain", tall: false },
+    { src: "/images/gal-candlelit-dinner.jpg", alt: "A candlelit dinner table with glasses of wine", tall: false },
+    { src: "/images/gal-fried-chicken-tray.jpg", alt: "A tray of fried chicken with bread rolls and fries", tall: true },
+    { src: "/images/gal-red-velvet.jpg", alt: "Red velvet cake topped with redcurrants", tall: false },
+    { src: "/images/gal-mac-skillet.jpg", alt: "Mac and cheese with crispy bacon in a skillet", tall: false },
+    { src: "/images/gal-plantain.jpg", alt: "Golden fried ripe plantain", tall: false },
+    { src: "/images/gal-ribs.jpg", alt: "Glazed barbecue ribs", tall: true },
+    { src: "/images/gal-chicken-waffles.jpg", alt: "Fried chicken and waffles with red cabbage slaw", tall: false },
+    { src: "/images/gal-buffet-serving.jpg", alt: "Serving from a catering buffet", tall: true },
+    { src: "/images/gal-puff-puff.jpg", alt: "Puff puff with a creamy dipping sauce", tall: false },
   ],
 };
 

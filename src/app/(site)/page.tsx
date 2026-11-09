@@ -4,9 +4,10 @@ import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { images } from "@/brand/images";
 import { brand } from "@/brand/tokens";
-import { faqs } from "@/brand/content";
+import { faqs, ghanaianDishes, moreGhanaianDishes, moreSoulFoodDishes, soulFoodDishes } from "@/brand/content";
 import { getBusinessInfo, getServices, siteUrl } from "@/lib/server-data";
-import { CtaBand, Faq, GhanaianDishes, HowItWorks, SectionHeading, ServiceCard } from "@/components/site/sections";
+import { CtaBand, Faq, HowItWorks, SectionHeading, ServiceCard, Testimonials } from "@/components/site/sections";
+import { DishTabs } from "@/components/site/dish-tabs";
 
 
 export const revalidate = 300;
@@ -26,6 +27,7 @@ export default async function HomePage() {
         areaServed: info.serviceArea,
         address: { "@type": "PostalAddress", addressLocality: "Accra", addressCountry: "GH" },
         priceRange: "GH₵GH₵",
+        servesCuisine: ["Ghanaian", "West African", "Soul food", "Southern"],
         sameAs: info.instagram ? [`https://instagram.com/${info.instagram}`] : [],
       },
       {
@@ -110,7 +112,7 @@ export default async function HomePage() {
           <SectionHeading eyebrow="About Sonia" title="Cooking is how I take care of people" />
           <p className="mt-6 text-lg text-muted">
             I grew up in a busy Accra kitchen where food was how we celebrated, comforted and welcomed people. Today I
-            cook modern Ghanaian and international dishes with the best local produce, and I love making a dinner at
+            cook Ghanaian classics, Southern soul food and international dishes with the best local produce, and I love making a dinner at
             home feel like a night out.
           </p>
           <p className="mt-4 text-lg text-muted">
@@ -122,17 +124,24 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Ghanaian favourites */}
+      <Testimonials />
+
+      {/* Signature dishes */}
       <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeading
-            eyebrow="From my kitchen"
-            title="Ghanaian favourites, cooked at home"
-            body="The dishes I grew up on, made with fresh market produce. Mix them into any menu or build a whole night around them."
+            eyebrow="On the menu"
+            title="Ghanaian favourites & soul food classics"
+            body="The Ghanaian dishes I grew up on and the soul food everyone asks for, made with fresh produce. Mix them into any menu or build a whole night around them."
           />
-          <Link href="/book" className="inline-flex items-center gap-1 font-semibold text-harbour hover:underline">Book a Ghanaian dinner <ArrowRight className="size-4" /></Link>
+          <Link href="/book" className="inline-flex items-center gap-1 font-semibold text-harbour hover:underline">Book a dinner <ArrowRight className="size-4" /></Link>
         </div>
-        <GhanaianDishes />
+        <DishTabs
+          cuisines={[
+            { id: "ghanaian", label: "Ghanaian", dishes: ghanaianDishes, more: moreGhanaianDishes },
+            { id: "soul-food", label: "Soul food", dishes: soulFoodDishes, more: moreSoulFoodDishes },
+          ]}
+        />
       </section>
 
       {/* FAQ */}

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
 import { addDays, parse, startOfMonth } from "date-fns";
-import { ArrowLeft, ArrowRight, CalendarDays, Check, Clock, Loader2, Lock, Users, Wallet } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, Check, Clock, Loader2, Lock, Users, UtensilsCrossed, Wallet } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import { computeQuote, PricingError } from "@/lib/domain/pricing";
 import { formatMoney } from "@/lib/domain/money";
 import { formatDateLong, formatTime12, todayInAccra } from "@/lib/domain/time";
 import { cn, errorMessage, whatsappLink } from "@/lib/utils";
+import { findSampleMenu } from "@/brand/content";
 
 type Details = z.output<typeof bookingDetailsSchema>;
 type DetailsInput = z.input<typeof bookingDetailsSchema>;
@@ -33,6 +34,8 @@ export function BookingWizard() {
   const start = useAction(api.bookings.start);
 
   const presetSlug = params.get("service");
+  // A sample menu can be passed with ?menu=slug ("Start from this menu" on /services).
+  const presetMenu = findSampleMenu(params.get("menu"));
   const [step, setStep] = useState(presetSlug ? 1 : 0);
   const [chosenServiceId, setServiceId] = useState<Id<"services"> | null>(null);
   const [date, setDate] = useState<string>();
@@ -63,7 +66,7 @@ export function BookingWizard() {
   const form = useForm<DetailsInput, unknown, Details>({
     resolver: zodResolver(bookingDetailsSchema),
     mode: "onTouched",
-    defaultValues: { guests: service?.minGuests ?? 2, address: "", occasion: "", dietaryNotes: "", notes: "", name: "", phone: "", email: "" },
+    defaultValues: { guests: service?.minGuests ?? 2, address: "", occasion: "", dietaryNotes: "", notes: presetMenu ? `I'd like to start from your "${presetMenu.title}" sample menu.` : "", name: "", phone: "", email: "" },
   });
 
   useEffect(() => {
@@ -375,6 +378,9 @@ export function BookingWizard() {
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky">Your booking</p>
         <dl className="mt-4 space-y-3 text-[15px]">
           <div className="flex gap-3"><Wallet className="mt-0.5 size-4 text-sky" /><div><dt className="sr-only">Service</dt><dd>{service?.name ?? "Choose a service"}</dd></div></div>
+          {presetMenu && (!service || service.slug === presetMenu.service) && (
+            <div className="flex gap-3"><UtensilsCrossed className="mt-0.5 size-4 text-sky" /><div><dt className="sr-only">Menu</dt><dd>Starting from &ldquo;{presetMenu.title}&rdquo;</dd></div></div>
+          )}
           <div className="flex gap-3"><CalendarDays className="mt-0.5 size-4 text-sky" /><div><dt className="sr-only">When</dt><dd>{date ? `${formatDateLong(date)}${time ? `, ${formatTime12(time)}` : ""}` : "Pick a date"}</dd></div></div>
           <div className="flex gap-3"><Users className="mt-0.5 size-4 text-sky" /><div><dt className="sr-only">Guests</dt><dd>{details ? `${details.guests} guests` : "Guests"}</dd></div></div>
         </dl>

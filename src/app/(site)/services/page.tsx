@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getBusinessInfo, getServices } from "@/lib/server-data";
 import { CtaBand, SectionHeading, ServiceCard } from "@/components/site/sections";
+import { MenuTabs } from "@/components/site/menu-tabs";
 import { sampleMenus } from "@/brand/content";
 import { formatMoney } from "@/lib/domain/money";
 
@@ -50,22 +51,11 @@ export default async function ServicesPage() {
 
       <section className="mx-auto max-w-6xl px-4 pt-20 sm:px-6">
         <SectionHeading eyebrow="Sample menus" title="A few menus I love cooking" body="Every menu is planned with you. These are starting points, not set lists." />
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {sampleMenus.map((m) => (
-            <article key={m.title} className="rounded-[var(--radius-card)] border border-horizon bg-white p-7">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-harbour">{m.service}</p>
-              <h3 className="mt-2 text-2xl">{m.title}</h3>
-              <ol className="mt-5 space-y-3">
-                {m.courses.map((c) => (
-                  <li key={c} className="flex gap-3 text-night-sky/85">
-                    <span className="mt-2 size-1.5 shrink-0 rounded-full bg-sky" aria-hidden />
-                    {c}
-                  </li>
-                ))}
-              </ol>
-            </article>
-          ))}
-        </div>
+        <MenuTabs
+          groups={services
+            .map((s) => ({ slug: s.slug, name: s.name, menus: sampleMenus.filter((m) => m.service === s.slug) }))
+            .filter((g) => g.menus.length > 0)}
+        />
       </section>
       <CtaBand />
     </>
