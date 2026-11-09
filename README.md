@@ -66,10 +66,10 @@ proxies `/api/auth/*` to it. No third-party auth account is needed.
 2. `npx convex env set BETTER_AUTH_SECRET "$(openssl rand -base64 32)"`
 3. `npx convex env set SITE_URL http://localhost:3000`
 4. `npx convex env set OWNER_EMAILS sonia@example.com`
-5. Visit `/sign-in` → "First time? Create your account" with that email.
+5. Visit `/sign-in` → "First time? Create your account".
 
-Only `OWNER_EMAILS` can sign up, and dashboard access is enforced again in
-Convex (`convex/lib/auth.ts`) on every call.
+Anyone can create an account; dashboard access still requires the email to be
+listed in `OWNER_EMAILS` (`convex/lib/auth.ts`).
 
 ### 2. Paystack (test mode)
 

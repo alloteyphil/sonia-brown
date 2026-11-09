@@ -50,7 +50,7 @@ function SignInForm() {
       <div>
         <h1 className="font-display text-2xl">{mode === "sign-in" ? "Sign in" : "Create your account"}</h1>
         <p className="mt-1 text-sm text-muted">
-          {mode === "sign-in" ? "Owner dashboard" : "Only the owner email can create an account."}
+          {mode === "sign-in" ? "Owner dashboard" : "Use any email. Password must be at least 10 characters."}
         </p>
       </div>
       {mode === "sign-up" && (
