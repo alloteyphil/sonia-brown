@@ -90,6 +90,45 @@ export const howItWorks = [
   },
 ];
 
+export const ghanaianDishes = [
+  {
+    name: "Jollof Rice",
+    image: "/images/dish-jollof.jpg",
+    alt: "Jollof rice with grilled chicken, fried plantain and fresh salad",
+    description: "Smoky, slow-cooked tomato rice with charred chicken, sweet plantain and a crisp salad. The party favourite.",
+  },
+  {
+    name: "Waakye",
+    image: "/images/dish-waakye.jpg",
+    alt: "Waakye with spaghetti, gari, boiled egg, plantain, shito and fish in stew",
+    description: "Rice and beans with all the trimmings: my homemade shito, gari, stew, egg and fried plantain.",
+  },
+  {
+    name: "Banku & Tilapia",
+    image: "/images/dish-banku-tilapia.jpg",
+    alt: "Two balls of banku beside a whole grilled tilapia and fresh pepper sauce",
+    description: "Silky banku with whole grilled tilapia and a bright, fresh pepper. Best eaten with your hands.",
+  },
+  {
+    name: "Fufu & Light Soup",
+    image: "/images/dish-fufu-light-soup.jpg",
+    alt: "Fufu in a bowl of light soup with goat meat and garden egg",
+    description: "Smooth fufu in a peppery tomato light soup with tender goat. Comfort in a bowl.",
+  },
+  {
+    name: "Kelewele",
+    image: "/images/dish-kelewele.jpg",
+    alt: "Spiced fried plantain cubes with roasted groundnuts",
+    description: "Ripe plantain tossed in ginger and chilli, fried until caramelised. Served with roasted groundnuts.",
+  },
+  {
+    name: "Red Red",
+    image: "/images/dish-red-red.jpg",
+    alt: "Black-eyed bean stew in palm oil with fried plantain and gari",
+    description: "Black-eyed beans simmered in palm oil and tomato, with fried plantain and gari. Naturally vegetarian.",
+  },
+];
+
 export const sampleMenus = [
   {
     title: "Accra Evening",

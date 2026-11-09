@@ -2,8 +2,11 @@ import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { getPaymentProvider } from "./payments/paystack";
+import { authComponent, createAuth } from "./auth";
 
 const http = httpRouter();
+
+authComponent.registerRoutes(http, createAuth);
 
 /**
  * Paystack webhook. Configure in Paystack → Settings → API Keys & Webhooks:

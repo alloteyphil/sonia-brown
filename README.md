@@ -7,7 +7,7 @@ everything from a phone-friendly dashboard.
 
 **Stack:** Next.js 16 (App Router, TypeScript strict) · Tailwind CSS 4 with
 shadcn-style components · Convex (database, server functions, realtime,
-cron) · Clerk (owner login) · Paystack (GHS, card + MoMo) · Resend (email) ·
+cron) · Better Auth on Convex (owner login) · Paystack (GHS, card + MoMo) · Resend (email) ·
 Zod · React Hook Form · date-fns · Vitest + convex-test · Playwright.
 
 ---
@@ -49,16 +49,19 @@ npm run seed              # 3 services, 5 clients, 7 bookings in various states,
 npm run dev               # http://localhost:3000
 ```
 
-### 1. Clerk (owner login)
+### 1. Owner login (Better Auth on Convex)
 
-1. Create an app at clerk.com. Put the publishable and secret keys in `.env.local`.
-2. **Disable public sign-ups** (User & Authentication → Restrictions) and invite Sonia's email.
-3. JWT Templates → New → **Convex**. Keep the name `convex`. Copy the Issuer URL.
-4. `npx convex env set CLERK_JWT_ISSUER_DOMAIN https://xxx.clerk.accounts.dev`
-5. `npx convex env set OWNER_EMAILS sonia@example.com`
+Auth runs inside Convex via `@convex-dev/better-auth` (`convex/auth.ts`); Next.js
+proxies `/api/auth/*` to it. No third-party auth account is needed.
 
-Dashboard access is enforced in Convex (`convex/lib/auth.ts`), so even a stray
-Clerk account can't read bookings unless its email is in `OWNER_EMAILS`.
+1. Add `NEXT_PUBLIC_CONVEX_SITE_URL` (your `.convex.site` URL) to `.env.local`.
+2. `npx convex env set BETTER_AUTH_SECRET "$(openssl rand -base64 32)"`
+3. `npx convex env set SITE_URL http://localhost:3000`
+4. `npx convex env set OWNER_EMAILS sonia@example.com`
+5. Visit `/sign-in` → "First time? Create your account" with that email.
+
+Only `OWNER_EMAILS` can sign up, and dashboard access is enforced again in
+Convex (`convex/lib/auth.ts`) on every call.
 
 ### 2. Paystack (test mode)
 
@@ -133,7 +136,7 @@ and price so editing a service never changes past bookings.
 
 ### Security
 Server-side Zod validation, rate limits on booking (per email + global) and the
-webhook (per IP), owner allowlist on every dashboard function, Clerk route
+webhook (per IP), owner allowlist on sign-up and every dashboard function, session-cookie route
 protection (`src/proxy.ts`), unguessable access tokens on guest confirmation
 links, no secrets in the client, basic security headers.
 
@@ -176,7 +179,7 @@ scripts/preview/        fixture data for UI preview mode
 1. `npx convex deploy` for a production Convex deployment; set the Convex env
    vars above on it (`npx convex env set --prod ...`), with `SITE_URL` = your domain.
 2. Import the repo in Vercel. Set the Next.js env vars from `.env.example`
-   (`NEXT_PUBLIC_CONVEX_URL` = production URL, Clerk production keys, `NEXT_PUBLIC_SITE_URL`).
+   (`NEXT_PUBLIC_CONVEX_URL`, `NEXT_PUBLIC_CONVEX_SITE_URL`, `NEXT_PUBLIC_SITE_URL`).
    Optionally set the build command to `npx convex deploy --cmd 'npm run build'` with `CONVEX_DEPLOY_KEY`.
 3. Update the Paystack webhook to the production `.convex.site` URL and switch to live keys.
 4. Update business details in Dashboard → Settings (phone, WhatsApp, email, Instagram).

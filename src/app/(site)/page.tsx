@@ -6,7 +6,7 @@ import { images } from "@/brand/images";
 import { brand } from "@/brand/tokens";
 import { faqs } from "@/brand/content";
 import { getBusinessInfo, getServices, siteUrl } from "@/lib/server-data";
-import { CtaBand, Faq, Gallery, HowItWorks, SectionHeading, ServiceCard } from "@/components/site/sections";
+import { CtaBand, Faq, GhanaianDishes, HowItWorks, SectionHeading, ServiceCard } from "@/components/site/sections";
 
 
 export const revalidate = 300;
@@ -122,10 +122,17 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Gallery */}
-      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6" aria-labelledby="gallery">
-        <SectionHeading eyebrow="From my kitchen" title="A taste of what I cook" />
-        <Gallery />
+      {/* Ghanaian favourites */}
+      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <SectionHeading
+            eyebrow="From my kitchen"
+            title="Ghanaian favourites, cooked at home"
+            body="The dishes I grew up on, made with fresh market produce. Mix them into any menu or build a whole night around them."
+          />
+          <Link href="/book" className="inline-flex items-center gap-1 font-semibold text-harbour hover:underline">Book a Ghanaian dinner <ArrowRight className="size-4" /></Link>
+        </div>
+        <GhanaianDishes />
       </section>
 
       {/* FAQ */}

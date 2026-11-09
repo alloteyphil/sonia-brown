@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "dev:convex": "convex dev",
-    "preview:ui": "PREVIEW_MOCK=1 NEXT_PUBLIC_CONVEX_URL=https://preview.invalid NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_preview next dev",
+    "preview:ui": "PREVIEW_MOCK=1 NEXT_PUBLIC_CONVEX_URL=https://preview.invalid NEXT_PUBLIC_CONVEX_SITE_URL=https://preview.invalid next dev",
     "typecheck": "tsc --noEmit && tsc -p convex --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
@@ -16,7 +16,7 @@
     "codegen:offline": "node scripts/convex-codegen-offline.mjs"
   },
   "dependencies": {
-    "@clerk/nextjs": "^7.9.25",
+    "@convex-dev/better-auth": "^0.13.0",
     "@fontsource-variable/dm-sans": "^5.3.0",
     "@fontsource-variable/fraunces": "^5.3.0",
     "@hookform/resolvers": "^7.0.5",
@@ -25,6 +25,7 @@
     "@radix-ui/react-select": "^2.4.1",
     "@radix-ui/react-slot": "^1.5.0",
     "@radix-ui/react-tabs": "^1.2.1",
+    "better-auth": "~1.7.16",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "convex": "^1.49.0",

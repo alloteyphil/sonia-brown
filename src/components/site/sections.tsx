@@ -4,7 +4,7 @@ import { ArrowRight, Clock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatMoney } from "@/lib/domain/money";
 import { serviceImage, images } from "@/brand/images";
-import { faqs, howItWorks, type PublicService } from "@/brand/content";
+import { faqs, ghanaianDishes, howItWorks, type PublicService } from "@/brand/content";
 
 export function SectionHeading({
   eyebrow,
@@ -81,6 +81,24 @@ export function Gallery() {
         </div>
       ))}
     </div>
+  );
+}
+
+export function GhanaianDishes() {
+  return (
+    <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {ghanaianDishes.map((d) => (
+        <li key={d.name} className="group overflow-hidden rounded-[var(--radius-card)] border border-horizon bg-white">
+          <div className="relative aspect-[4/3] overflow-hidden">
+            <Image src={d.image} alt={d.alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition duration-500 group-hover:scale-[1.03]" />
+          </div>
+          <div className="p-6">
+            <h3 className="text-2xl">{d.name}</h3>
+            <p className="mt-2 text-muted">{d.description}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 }
 

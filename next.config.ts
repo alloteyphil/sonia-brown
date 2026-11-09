@@ -8,7 +8,7 @@ const securityHeaders = [
 ];
 
 // UI preview mode: `PREVIEW_MOCK=1 npm run dev` renders the booking flow and
-// dashboard with fixture data, no Convex or Clerk needed. Off in production.
+// dashboard with fixture data, no Convex or auth backend needed. Off in production.
 const preview = process.env.PREVIEW_MOCK === "1";
 
 const nextConfig: NextConfig = {
@@ -17,8 +17,9 @@ const nextConfig: NextConfig = {
     ...(preview && {
       resolveAlias: {
         "convex/react": "./scripts/preview/mock-convex-react.tsx",
-        "@clerk/nextjs": "./scripts/preview/mock-clerk.tsx",
-        "convex/react-clerk": "./scripts/preview/mock-clerk.tsx",
+        "@convex-dev/better-auth/react": "./scripts/preview/mock-auth.tsx",
+        "@convex-dev/better-auth/client/plugins": "./scripts/preview/mock-auth.tsx",
+        "better-auth/react": "./scripts/preview/mock-auth.tsx",
       },
     }),
     rules: {

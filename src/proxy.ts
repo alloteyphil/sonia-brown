@@ -1,19 +1,17 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
-
-const isDashboard = createRouteMatcher(["/dashboard(.*)"]);
-const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY);
-
-const withClerk = clerkMiddleware(async (auth, req) => {
-  if (isDashboard(req)) await auth.protect();
-});
+import { getSessionCookie } from "better-auth/cookies";
+import { NextResponse, type NextRequest } from "next/server";
 
 /**
- * Protects /dashboard with Clerk. Data access is also enforced server-side in
- * Convex (requireOwner + OWNER_EMAILS), so this is defence in depth.
+ * Optimistic redirect for signed-out visitors. Data access is enforced
+ * server-side in Convex (requireOwner + OWNER_EMAILS), so this is defence in depth.
  */
-export default clerkConfigured ? withClerk : () => NextResponse.next();
+export function proxy(request: NextRequest) {
+  if (!getSessionCookie(request)) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
+  return NextResponse.next();
+}
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/sign-in/:path*"],
+  matcher: ["/dashboard/:path*"],
 };

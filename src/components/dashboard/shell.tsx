@@ -1,11 +1,12 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { RedirectToSignIn, UserButton, useAuth } from "@clerk/nextjs";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useConvexAuth, useQuery } from "convex/react";
-import { CalendarDays, LayoutDashboard, ListChecks, Settings, Sliders, Users, UtensilsCrossed, Loader2 } from "lucide-react";
+import { CalendarDays, LayoutDashboard, ListChecks, LogOut, Settings, Sliders, Users, UtensilsCrossed, Loader2 } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import { Wordmark, Monogram } from "@/components/site/logo";
+import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -19,18 +20,24 @@ const nav = [
 ];
 
 function Gate({ children }: { children: React.ReactNode }) {
-  const { isLoaded, isSignedIn } = useAuth();
+  const router = useRouter();
+  const { data: session, isPending: sessionPending } = authClient.useSession();
   const { isAuthenticated, isLoading } = useConvexAuth();
   const me = useQuery(api.dashboard.me, isAuthenticated ? {} : "skip");
 
-  if (!isLoaded || isLoading || (isAuthenticated && me === undefined)) {
-    return <div className="flex min-h-[60vh] items-center justify-center"><Loader2 className="size-8 animate-spin text-harbour" /></div>;
-  }
-  if (!isSignedIn) return <RedirectToSignIn />;
+  useEffect(() => {
+    // Only bounce when Better Auth itself has no session. If a session exists
+    // but Convex hasn't linked yet, keep waiting (or show an error below).
+    if (!sessionPending && !session) router.replace("/sign-in");
+  }, [sessionPending, session, router]);
+
+  const spinner = <div className="flex min-h-[60vh] items-center justify-center"><Loader2 className="size-8 animate-spin text-harbour" /></div>;
+  if (sessionPending || !session || isLoading) return spinner;
   if (!isAuthenticated) {
-    return <Notice title="Can't reach the database" body="Check that the Clerk JWT template named “convex” exists and CLERK_JWT_ISSUER_DOMAIN is set in Convex." />;
+    return <Notice title="Can't reach the database" body="You're signed in, but Convex didn't accept the session. Refresh once — if it keeps failing, check NEXT_PUBLIC_CONVEX_SITE_URL." />;
   }
-  if (me && !me.ok) return <Notice title="No access" body={me.error} />;
+  if (me === undefined) return spinner;
+  if (!me.ok) return <Notice title="No access" body={me.error} />;
   return <>{children}</>;
 }
 
@@ -39,8 +46,22 @@ function Notice({ title, body }: { title: string; body: string }) {
     <div className="mx-auto mt-20 max-w-md rounded-2xl border border-horizon bg-white p-8 text-center">
       <h1 className="font-display text-2xl">{title}</h1>
       <p className="mt-2 text-muted">{body}</p>
-      <div className="mt-6 flex justify-center"><UserButton /></div>
+      <div className="mt-6 flex justify-center"><SignOutButton /></div>
     </div>
+  );
+}
+
+function SignOutButton() {
+  const router = useRouter();
+  return (
+    <button
+      type="button"
+      onClick={async () => { await authClient.signOut(); router.replace("/sign-in"); }}
+      className="inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-sm text-muted hover:text-harbour"
+      aria-label="Sign out"
+    >
+      <LogOut className="size-4" />Sign out
+    </button>
   );
 }
 
@@ -61,7 +82,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </nav>
         <div className="flex items-center justify-between rounded-xl bg-cloud px-3 py-2">
           <Link href="/" className="text-sm text-muted hover:text-harbour">View site</Link>
-          <UserButton />
+          <SignOutButton />
         </div>
       </aside>
 
@@ -69,7 +90,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <header className="no-print sticky top-0 z-30 border-b border-horizon bg-white/95 backdrop-blur lg:hidden">
         <div className="flex h-14 items-center justify-between px-4">
           <Link href="/dashboard" className="flex items-center gap-2"><Monogram className="size-8" /><span className="font-display text-lg">Dashboard</span></Link>
-          <UserButton />
+          <SignOutButton />
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-2 [scrollbar-width:none]" aria-label="Dashboard">
           {nav.map((n) => (
