@@ -68,8 +68,9 @@ proxies `/api/auth/*` to it. No third-party auth account is needed.
 4. `npx convex env set OWNER_EMAILS sonia@example.com`
 5. Visit `/sign-in` → "First time? Create your account".
 
-Anyone can create an account; dashboard access still requires the email to be
-listed in `OWNER_EMAILS` (`convex/lib/auth.ts`).
+Anyone can create an account for testing. Dashboard access is enforced on every
+Convex call and is denied unless the signed-in email is listed in
+`OWNER_EMAILS` (`convex/lib/auth.ts`).
 
 ### 2. Paystack (test mode)
 
