@@ -7,11 +7,18 @@
  * To swap in a real photo: drop it in assets/photos/, point an entry in the
  * script at it, run `npm run photos`, and update the path here if it changed.
  * Warm, natural light, close-up food and hands cooking work best.
- * Recommended source sizes: hero 1600x2000 (portrait), others 1600x1200.
+ * Recommended source sizes: hero 1800x1200 (landscape), portraits 1600x2000,
+ * others 1600x1200.
  */
 export const images = {
-  hero: { src: "/images/hero-jollof.jpg", alt: "Jollof rice with fried plantain on a white platter" },
-  sonia: { src: "/images/sonia.svg", alt: "Portrait of Sonia Brown in her chef's whites" },
+  hero: { src: "/images/hero-jollof-table.jpg", alt: "A dish of jollof rice topped with chicken and pepper skewers, with a whole grilled fish behind it" },
+  /**
+   * Sonia's portrait. Leave as null until there is a real photo: the About
+   * sections show `table` instead. To add one, grade it to 4:5 and set e.g.
+   * { src: "/images/sonia.jpg", alt: "Sonia Brown in her kitchen" }.
+   */
+  sonia: null as { src: string; alt: string } | null,
+  table: { src: "/images/about-candlelit.jpg", alt: "Guests reaching across a candlelit dinner table" },
   services: {
     "private-dinner": { src: "/images/service-dinner-table.jpg", alt: "A candlelit dinner table set with sharing plates" },
     "weekly-meal-prep": { src: "/images/service-meal-prep-boxes.jpg", alt: "Stacked meal prep containers of rice, vegetables and chicken" },

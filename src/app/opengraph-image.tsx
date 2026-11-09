@@ -7,7 +7,7 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 // Link previews (WhatsApp, Instagram, iMessage) show this image, so lead with food.
-const photo = await readFile(join(process.cwd(), "public/images/hero-jollof.jpg"));
+const photo = await readFile(join(process.cwd(), "public/images/hero-jollof-table.jpg"));
 const photoSrc = `data:image/jpeg;base64,${photo.toString("base64")}`;
 
 export default function OgImage() {

@@ -24,7 +24,8 @@ const OUT = "public/images";
 const CARD = [1200, 900]; // 4:3 dish and service cards
 const SQUARE = [1000, 1000]; // gallery
 const TALL = [900, 1200]; // gallery, 3:4
-const HERO = [1100, 1375]; // 4:5
+const HERO = [1800, 1200]; // 3:2, runs to the right edge of the home page
+const PORTRAIT = [1000, 1250]; // 4:5, about sections
 
 /**
  * out:      file name written to public/images (without .jpg)
@@ -35,7 +36,8 @@ const HERO = [1100, 1375]; // 4:5
  */
 const outputs = [
   // Hero + service cards
-  { out: "hero-jollof", src: "stock/gh-jollof-platter.jpg", size: HERO },
+  { out: "hero-jollof-table", src: "stock/gh-jollof-kebabs.jpg", size: HERO, position: "centre" },
+  { out: "about-candlelit", src: "stock/scene-candlelit-dinner.jpg", size: PORTRAIT },
   { out: "service-dinner-table", src: "stock/scene-dinner-table.jpg", size: CARD, position: "centre" },
   { out: "service-meal-prep-boxes", src: "stock/scene-meal-prep.jpg", size: CARD },
   { out: "service-catering", src: "stock/scene-buffet.jpg", size: CARD },

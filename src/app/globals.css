@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "@fontsource-variable/fraunces";
 @import "@fontsource-variable/dm-sans";
+@import "@fontsource/young-serif";
 
 /* Sonia Brown brand tokens (mirrors src/brand/tokens.ts) */
 :root {
@@ -16,6 +17,23 @@
   --ember: #b42318;
   --muted: #4a5d72;
   --surface: #ffffff;
+  --raised: #eef3f8;
+  --display: "Fraunces Variable", Georgia, serif;
+  --radius-control: 9999px;
+  --radius-card: 1.25rem;
+}
+
+/* The customer-facing site: a set table. Linen surfaces, navy ink, and Sonia's
+   blue kept for actions and the plate-rim line. The dashboard keeps the values
+   above. */
+html:has(.site-theme) {
+  --cloud: #f8f6f1;
+  --raised: #f0ece4;
+  --horizon: #e2ddd3;
+  --muted: #4d5a6b;
+  --display: "Young Serif", Georgia, serif;
+  --radius-control: 0.625rem;
+  --radius-card: 0.875rem;
 }
 
 @theme inline {
@@ -31,9 +49,9 @@
   --color-ember: var(--ember);
   --color-muted: var(--muted);
   --color-surface: var(--surface);
-  --font-display: "Fraunces Variable", Georgia, serif;
+  --color-raised: var(--raised);
+  --font-display: var(--display);
   --font-sans: "DM Sans Variable", system-ui, sans-serif;
-  --radius-card: 1.25rem;
 }
 
 html {
@@ -50,12 +68,13 @@ body {
 }
 
 /* —— Motion ——
-   Transform + opacity only. Kill-switch below for prefers-reduced-motion. */
+   One curve, transform + opacity only. Kill-switch below for
+   prefers-reduced-motion. */
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(1.25rem);
+    transform: translateY(0.5rem);
   }
   to {
     opacity: 1;
@@ -63,128 +82,50 @@ body {
   }
 }
 
-@keyframes soft-scale-in {
+@keyframes fade {
   from {
     opacity: 0;
-    transform: scale(1.06);
   }
   to {
     opacity: 1;
-    transform: scale(1);
   }
 }
 
-@keyframes float-y {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-0.55rem);
-  }
-}
-
-@keyframes ken-burns {
-  from {
-    transform: scale(1.08);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-@keyframes fab-breathe {
-  0%,
-  100% {
-    box-shadow: 0 12px 30px -10px rgba(11, 34, 57, 0.55);
-  }
-  50% {
-    box-shadow: 0 16px 36px -8px rgba(31, 138, 90, 0.55);
-  }
-}
-
-@keyframes wave-drift {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-4%);
-  }
-}
-
-.hero-rise {
-  animation: rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.hero-rise-1 {
-  animation-delay: 0.08s;
-}
-.hero-rise-2 {
-  animation-delay: 0.18s;
-}
-.hero-rise-3 {
-  animation-delay: 0.3s;
-}
-.hero-rise-4 {
-  animation-delay: 0.42s;
-}
-.hero-rise-5 {
-  animation-delay: 0.54s;
-}
-
-.hero-frame {
-  animation: soft-scale-in 1.15s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: 0.12s;
-}
-
-.hero-photo {
-  animation: ken-burns 8s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.hero-float {
-  animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: 0.55s;
-}
-
-.hero-bob {
-  animation: float-y 4.8s ease-in-out 1.35s infinite;
-}
-
-/* Visible by default (no-JS). Hidden only after the client enhances. */
-.reveal[data-enhanced="true"]:not([data-inview="true"]) {
-  opacity: 0;
-  transform: translateY(1.35rem);
-}
-
-.reveal[data-enhanced="true"] {
-  transition:
-    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
-}
-
-.reveal[data-enhanced="true"][data-inview="true"] {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.wa-fab-pulse {
-  animation: fab-breathe 2.8s ease-in-out infinite;
-}
-
-.cta-wave {
-  animation: wave-drift 14s ease-in-out infinite alternate;
-}
-
-.dish-tabs-panel[data-state="active"] {
+/* The one entrance on load: the page's opening block rises in, lightly staggered. */
+.enter > * {
   animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.enter > :nth-child(2) {
+  animation-delay: 0.05s;
+}
+.enter > :nth-child(3) {
+  animation-delay: 0.1s;
+}
+.enter > :nth-child(4) {
+  animation-delay: 0.15s;
+}
+
+.tabs-panel[data-state="active"] {
+  animation: fade 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Anything Sonia would hand you on paper (a menu, a booking slip) is a white
+   card with a thin sky-blue line set in from the edge, like the rim of a plate. */
+.menu-card {
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--night-sky) 12%, transparent);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 0 5px #fff,
+    inset 0 0 0 6px var(--sky),
+    0 1px 2px rgba(11, 34, 57, 0.05);
 }
 
 h1,
 h2,
 h3,
 .font-display {
-  font-family: var(--font-display);
+  font-family: var(--display);
   font-optical-sizing: auto;
   letter-spacing: -0.015em;
 }

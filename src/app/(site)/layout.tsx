@@ -8,10 +8,13 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const info = await getBusinessInfo();
   return (
     <ConvexPublicProvider>
-      <SiteHeader />
-      <main id="main">{children}</main>
-      <SiteFooter info={info} />
-      <WhatsAppFab number={info.whatsapp} />
+      {/* .site-theme switches the tokens in globals.css to the customer-site palette and type. */}
+      <div className="site-theme">
+        <SiteHeader />
+        <main id="main">{children}</main>
+        <SiteFooter info={info} />
+        <WhatsAppFab number={info.whatsapp} />
+      </div>
     </ConvexPublicProvider>
   );
 }

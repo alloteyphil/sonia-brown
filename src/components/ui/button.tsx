@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-semibold transition-[color,background-color,border-color,box-shadow,transform,opacity] duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 disabled:hover:scale-100 [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-control)] font-semibold transition-[color,background-color,border-color,transform,opacity] duration-150 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -13,6 +13,7 @@ const buttonVariants = cva(
         outline: "border border-horizon bg-white text-night-sky hover:border-harbour hover:text-harbour",
         ghost: "text-night-sky hover:bg-sky-mist",
         dark: "bg-night-sky text-white hover:bg-night-sky/90",
+        light: "bg-white text-night-sky hover:bg-white/90",
         danger: "bg-ember text-white hover:bg-ember/90",
         whatsapp: "bg-[#1f8a5a] text-white hover:bg-[#18724a]",
       },

@@ -15,16 +15,15 @@ export default async function BookPage() {
   const configured = Boolean(process.env.NEXT_PUBLIC_CONVEX_URL);
   const info = await getBusinessInfo();
   return (
-    <section className="mx-auto max-w-6xl px-4 pb-10 pt-10 sm:px-6">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-harbour">Book Sonia</p>
-      <h1 className="mt-2 text-4xl sm:text-5xl">Let&apos;s get your date in the diary</h1>
+    <section className="mx-auto max-w-6xl px-5 pb-10 pt-12 sm:px-8 sm:pt-16">
+      <h1 className="text-4xl leading-[1.1] sm:text-5xl">Let&apos;s get your date in the diary</h1>
       <div className="mt-10">
         {configured ? (
           <Suspense fallback={<Skeleton className="h-96" />}>
             <BookingWizard />
           </Suspense>
         ) : (
-          <div className="rounded-2xl border border-horizon bg-white p-8">
+          <div className="rounded-[var(--radius-card)] border border-horizon bg-white p-8">
             <p className="text-lg">Online booking is being set up. In the meantime, message me and I&apos;ll book you in personally.</p>
             <Button asChild variant="whatsapp" className="mt-5">
               <a href={whatsappLink(info.whatsapp, "Hi Sonia, I'd like to book.")}>Book on WhatsApp</a>

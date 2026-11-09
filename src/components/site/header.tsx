@@ -29,57 +29,57 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b bg-cloud/90 backdrop-blur transition-[border-color,box-shadow] duration-300",
-        scrolled ? "border-horizon shadow-[0_8px_24px_-18px_rgba(11,34,57,0.45)]" : "border-horizon/70 shadow-none",
+        "sticky top-0 z-40 border-b bg-cloud/95 backdrop-blur-sm transition-colors duration-200",
+        scrolled || open ? "border-horizon" : "border-transparent",
       )}
     >
-      <div className="mx-auto flex h-18 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
         <Link href="/" aria-label="Sonia Brown home" onClick={() => setOpen(false)}>
           <Wordmark />
         </Link>
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
+        <nav className="hidden items-center gap-7 md:flex" aria-label="Main">
           {nav.map((n) => (
             <Link
               key={n.href}
               href={n.href}
+              aria-current={pathname === n.href ? "page" : undefined}
               className={cn(
-                "rounded-full px-4 py-2 text-[15px] font-medium text-night-sky/80 transition-colors hover:bg-sky-mist hover:text-night-sky",
-                pathname === n.href && "text-harbour",
+                "py-2 text-[15px] text-night-sky/70 underline-offset-8 transition-colors hover:text-night-sky",
+                pathname === n.href && "text-night-sky underline decoration-sky decoration-2",
               )}
             >
               {n.label}
             </Link>
           ))}
-          <Button asChild className="ml-2">
+          <Button asChild size="sm" className="ml-1 px-5">
             <Link href="/book">Book Sonia</Link>
           </Button>
         </nav>
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-1 md:hidden">
           <Button asChild size="sm">
             <Link href="/book">Book</Link>
           </Button>
           <button
-            className="rounded-full p-2 transition-colors hover:bg-sky-mist"
+            className="flex size-11 items-center justify-center rounded-[var(--radius-control)] transition-colors hover:bg-raised"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((o) => !o)}
           >
-            {open ? <X className="size-6" /> : <Menu className="size-6" />}
+            {open ? <X className="size-5" strokeWidth={1.5} /> : <Menu className="size-5" strokeWidth={1.5} />}
           </button>
         </div>
       </div>
       {open && (
-        <nav className="border-t border-horizon bg-cloud px-4 pb-5 pt-2 md:hidden" aria-label="Mobile">
-          {nav.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              onClick={() => setOpen(false)}
-              className="block rounded-xl px-3 py-3 text-lg font-medium transition-colors hover:bg-sky-mist"
-            >
-              {n.label}
-            </Link>
-          ))}
+        <nav className="border-t border-horizon bg-cloud px-5 pb-4 pt-1 md:hidden" aria-label="Mobile">
+          <ul className="divide-y divide-horizon">
+            {nav.map((n) => (
+              <li key={n.href}>
+                <Link href={n.href} onClick={() => setOpen(false)} className="block py-4 text-lg">
+                  {n.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </nav>
       )}
     </header>

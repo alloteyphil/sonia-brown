@@ -36,23 +36,23 @@ export function MonthCalendar({
           type="button"
           onClick={() => onMonthChange(addMonths(month, -1))}
           disabled={!canPrev}
-          className="rounded-full p-2 hover:bg-sky-mist disabled:opacity-30"
+          className="flex size-10 items-center justify-center rounded-[10px] transition-colors hover:bg-raised disabled:opacity-30"
           aria-label="Previous month"
         >
-          <ChevronLeft className="size-5" />
+          <ChevronLeft className="size-5" strokeWidth={1.5} />
         </button>
         <p className="font-display text-xl" aria-live="polite">{format(month, "MMMM yyyy")}</p>
         <button
           type="button"
           onClick={() => onMonthChange(addMonths(month, 1))}
           disabled={!canNext}
-          className="rounded-full p-2 hover:bg-sky-mist disabled:opacity-30"
+          className="flex size-10 items-center justify-center rounded-[10px] transition-colors hover:bg-raised disabled:opacity-30"
           aria-label="Next month"
         >
-          <ChevronRight className="size-5" />
+          <ChevronRight className="size-5" strokeWidth={1.5} />
         </button>
       </div>
-      <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold uppercase tracking-wide text-muted" aria-hidden>
+      <div className="grid grid-cols-7 gap-1 text-center text-[13px] text-muted" aria-hidden>
         {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => <div key={d} className="py-1">{d}</div>)}
       </div>
       <div className={cn("mt-1 grid grid-cols-7 gap-1", loading && "animate-pulse")} role="grid">
@@ -70,9 +70,9 @@ export function MonthCalendar({
               aria-pressed={isSel}
               aria-label={`${format(d, "EEEE d MMMM")}${open ? ", available" : ", unavailable"}`}
               className={cn(
-                "relative flex aspect-square items-center justify-center rounded-xl text-[15px] transition",
+                "relative flex aspect-square items-center justify-center rounded-[10px] text-[15px] tabular-nums transition-colors duration-150",
                 !inMonth && "invisible",
-                open ? "bg-sky-mist font-semibold text-night-sky hover:bg-sky/50" : "text-night-sky/30",
+                open ? "bg-sky-mist font-medium text-night-sky hover:bg-sky/50" : "text-night-sky/30",
                 isSel && "bg-harbour text-white hover:bg-harbour",
               )}
             >

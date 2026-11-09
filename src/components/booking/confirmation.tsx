@@ -32,7 +32,7 @@ export function Confirmation({ reference }: { reference: string }) {
   if (booking === undefined) return <Skeleton className="h-96" />;
   if (booking === null) {
     return (
-      <div className="rounded-2xl border border-horizon bg-white p-8 text-center">
+      <div className="rounded-[var(--radius-card)] border border-horizon bg-white p-8 text-center">
         <h1 className="text-3xl">We couldn&apos;t find that booking</h1>
         <p className="mt-2 text-muted">Please use the link from your confirmation email, or contact me on WhatsApp.</p>
         <Button asChild className="mt-6"><Link href="/book">Make a booking</Link></Button>
@@ -44,26 +44,26 @@ export function Confirmation({ reference }: { reference: string }) {
   const awaitingOnline = booking.paymentChoice !== "later" && !paidOnline && booking.status === "pending";
   const expired = booking.status === "cancelled" && booking.cancellationReason?.startsWith("Payment not");
 
-  let icon = <CheckCircle2 className="size-14 text-meadow" />;
-  let title = `You're booked, ${booking.firstName}!`;
+  let icon = <CheckCircle2 className="size-10 text-meadow" strokeWidth={1.5} />;
+  let title = `You're booked, ${booking.firstName}`;
   let body = "I've emailed your confirmation. I'll be in touch to plan the menu.";
   if (booking.status === "pending" && booking.paymentChoice === "later") {
-    icon = <Clock3 className="size-14 text-harbour" />;
-    title = `Request received, ${booking.firstName}!`;
+    icon = <Clock3 className="size-10 text-harbour" strokeWidth={1.5} />;
+    title = `Request received, ${booking.firstName}`;
     body = "I'll confirm within 24 hours. You'll get an email, and you can pay in person or by mobile money.";
   } else if (booking.status === "pending" && paidOnline) {
-    title = `Payment received, ${booking.firstName}!`;
+    title = `Payment received, ${booking.firstName}`;
     body = "I'll confirm the details with you shortly.";
   } else if (awaitingOnline) {
-    icon = <Loader2 className="size-14 animate-spin text-harbour" />;
+    icon = <Loader2 className="size-10 animate-spin text-harbour" strokeWidth={1.5} />;
     title = verifying ? "Confirming your payment…" : "Waiting for your payment";
     body = "This page updates automatically as soon as Paystack confirms. Don't close it yet.";
   } else if (expired) {
-    icon = <XCircle className="size-14 text-ember" />;
+    icon = <XCircle className="size-10 text-ember" strokeWidth={1.5} />;
     title = "Payment wasn't completed";
     body = "Your slot hold expired, so the date has been released. You can start again, and it only takes a minute.";
   } else if (booking.status === "declined" || booking.status === "cancelled") {
-    icon = <XCircle className="size-14 text-ember" />;
+    icon = <XCircle className="size-10 text-ember" strokeWidth={1.5} />;
     title = booking.status === "declined" ? "I can't take this booking" : "This booking was cancelled";
     body = booking.cancellationReason ?? "Message me on WhatsApp and we'll find another date.";
   }
@@ -71,28 +71,30 @@ export function Confirmation({ reference }: { reference: string }) {
   const t = encodeURIComponent(token);
   return (
     <div>
-      <div className="rounded-[2rem] border border-horizon bg-white p-8 text-center" aria-live="polite">
-        <div className="flex justify-center">{icon}</div>
-        <h1 className="mt-4 text-4xl">{title}</h1>
-        <p className="mx-auto mt-3 max-w-md text-muted">{body}</p>
-        <p className="mt-5 inline-block rounded-full bg-sky-mist px-4 py-1.5 font-mono text-sm font-semibold tracking-wider text-harbour-deep">
-          {booking.reference}
-        </p>
+      <div className="enter" aria-live="polite">
+        <div>{icon}</div>
+        <h1 className="mt-4 text-4xl leading-[1.1] sm:text-5xl">{title}</h1>
+        <p className="mt-4 max-w-md text-lg text-muted">{body}</p>
       </div>
 
-      <div className="mt-6 rounded-[2rem] border border-horizon bg-white p-6 sm:p-8">
-        <dl className="grid gap-4 sm:grid-cols-2">
-          <div><dt className="text-sm text-muted">Service</dt><dd className="font-semibold">{booking.serviceName}</dd></div>
-          <div><dt className="text-sm text-muted">Guests</dt><dd className="font-semibold">{booking.guests}</dd></div>
-          <div><dt className="text-sm text-muted">Date</dt><dd className="font-semibold">{formatDateLong(booking.date)}</dd></div>
-          <div><dt className="text-sm text-muted">Time</dt><dd className="font-semibold">{formatTime12(booking.startTime)} – {formatTime12(booking.endTime)}</dd></div>
-          <div className="sm:col-span-2"><dt className="text-sm text-muted">Address</dt><dd className="font-semibold">{booking.address}</dd></div>
-        </dl>
-        <div className="mt-6 grid grid-cols-3 gap-3 rounded-2xl bg-cloud p-4 text-center">
-          <div><p className="text-xs text-muted">Total</p><p className="font-display text-xl">{formatMoney(booking.total)}</p></div>
-          <div><p className="text-xs text-muted">Paid</p><p className="font-display text-xl text-meadow">{formatMoney(booking.amountPaid)}</p></div>
-          <div><p className="text-xs text-muted">Balance</p><p className="font-display text-xl">{formatMoney(booking.balance)}</p></div>
+      {/* The booking slip: same card as the sample menus. */}
+      <div className="menu-card mt-10 p-7 sm:p-9">
+        <div className="flex items-baseline justify-between gap-4 border-b border-horizon pb-4">
+          <p className="font-display text-xl">Your booking</p>
+          <p className="font-mono text-sm tracking-wider text-night-sky/80">{booking.reference}</p>
         </div>
+        <dl className="mt-5 grid gap-4 sm:grid-cols-2">
+          <div><dt className="text-sm text-muted">Service</dt><dd className="font-medium">{booking.serviceName}</dd></div>
+          <div><dt className="text-sm text-muted">Guests</dt><dd className="font-medium tabular-nums">{booking.guests}</dd></div>
+          <div><dt className="text-sm text-muted">Date</dt><dd className="font-medium">{formatDateLong(booking.date)}</dd></div>
+          <div><dt className="text-sm text-muted">Time</dt><dd className="font-medium tabular-nums">{formatTime12(booking.startTime)} – {formatTime12(booking.endTime)}</dd></div>
+          <div className="sm:col-span-2"><dt className="text-sm text-muted">Address</dt><dd className="font-medium">{booking.address}</dd></div>
+        </dl>
+        <dl className="mt-6 grid grid-cols-3 gap-4 border-y border-horizon py-4 tabular-nums">
+          <div><dt className="text-sm text-muted">Total</dt><dd className="text-xl font-medium">{formatMoney(booking.total)}</dd></div>
+          <div><dt className="text-sm text-muted">Paid</dt><dd className="text-xl font-medium text-meadow">{formatMoney(booking.amountPaid)}</dd></div>
+          <div><dt className="text-sm text-muted">Balance</dt><dd className="text-xl font-medium">{formatMoney(booking.balance)}</dd></div>
+        </dl>
         <div className="mt-6 flex flex-wrap gap-3">
           {!expired && booking.status !== "declined" && booking.status !== "cancelled" && (
             <Button asChild variant="outline">
@@ -105,7 +107,7 @@ export function Confirmation({ reference }: { reference: string }) {
           {expired && <Button asChild><Link href="/book">Start again</Link></Button>}
         </div>
       </div>
-      <p className="mt-6 text-center text-sm text-muted">{booking.cancellationPolicy}</p>
+      <p className="mt-6 text-sm text-muted">{booking.cancellationPolicy}</p>
     </div>
   );
 }

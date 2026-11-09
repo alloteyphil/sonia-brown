@@ -1,15 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { images } from "@/brand/images";
 import { brand } from "@/brand/tokens";
 import { faqs, ghanaianDishes, moreGhanaianDishes, moreSoulFoodDishes, soulFoodDishes } from "@/brand/content";
 import { getBusinessInfo, getServices, siteUrl } from "@/lib/server-data";
-import { CtaBand, Faq, HowItWorks, SectionHeading, ServiceCard, Testimonials } from "@/components/site/sections";
+import { container, CtaBand, Faq, HowItWorks, SectionHeading, ServiceList, Testimonials } from "@/components/site/sections";
 import { DishTabs } from "@/components/site/dish-tabs";
-import { Reveal } from "@/components/site/reveal";
+import { cn } from "@/lib/utils";
 
+const textLink = "font-medium text-harbour-deep underline underline-offset-4 transition-colors hover:text-night-sky";
 
 export const revalidate = 300;
 export default async function HomePage() {
@@ -42,85 +42,56 @@ export default async function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-x-0 top-0 -z-10 h-[78%] bg-gradient-to-b from-sky-mist via-sky-mist/60 to-cloud" />
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-10 sm:px-6 md:grid-cols-[1.05fr_1fr] md:pb-24 md:pt-16">
-          <div>
-            <p className="hero-rise hero-rise-1 inline-flex items-center gap-2 rounded-full bg-white/80 px-3.5 py-1.5 text-sm font-medium text-harbour ring-1 ring-sky/60">
-              <span className="size-2 rounded-full bg-sunlight" aria-hidden /> Private chef in {info.serviceArea}
-            </p>
-            <h1 className="hero-rise hero-rise-2 mt-6 text-5xl leading-[1.02] sm:text-6xl lg:text-7xl">
-              Cooked for you,
-              <br />
-              <em className="font-normal text-harbour">at your table.</em>
-            </h1>
-            <p className="hero-rise hero-rise-3 mt-6 max-w-lg text-lg text-muted sm:text-xl">
-              I&apos;m Sonia. I bring restaurant-quality food to your home: private dinners, weekly meal prep and
-              catering for the moments that matter. I&apos;ll handle the cooking, the cleanup, and everything in between.
-            </p>
-            <div className="hero-rise hero-rise-4 mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg">
-                <Link href="/book">Book Sonia <ArrowRight /></Link>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link href="/services">See services &amp; menus</Link>
-              </Button>
-            </div>
-            <ul className="hero-rise hero-rise-5 mt-8 flex flex-wrap gap-x-6 gap-y-2 text-[15px] text-night-sky/80">
-              {["Ingredients included", "Cleanup done", "Pay by MoMo or card"].map((t) => (
-                <li key={t} className="flex items-center gap-1.5"><Check className="size-4 text-meadow" />{t}</li>
-              ))}
-            </ul>
+      {/* Hero: the words on linen, the food running off the right edge of the screen. */}
+      <section className="grid lg:grid-cols-[1.15fr_1fr]">
+        <div className="enter flex flex-col justify-center px-5 pb-12 pt-10 sm:px-8 sm:pt-16 lg:py-20 lg:pl-[max(2rem,calc((100vw-72rem)/2+2rem))] lg:pr-10">
+          <h1 className="text-balance text-[2.5rem] leading-[1.06] sm:text-[3.5rem]">
+            Ghanaian and soul food, cooked at your table
+          </h1>
+          <p className="mt-6 max-w-[34rem] text-lg text-muted sm:text-xl">
+            I&apos;m Sonia, a private chef in {info.serviceArea}. I shop, cook in your kitchen, serve and clean up, for
+            private dinners, weekly meal prep and events.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Button asChild size="lg">
+              <Link href="/book">Book Sonia</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link href="/services">See menus and prices</Link>
+            </Button>
           </div>
-          <div className="hero-frame relative mx-auto w-full max-w-md md:max-w-none">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-t-[999px] rounded-b-[2rem] ring-8 ring-white shadow-[0_30px_60px_-30px_rgba(11,34,57,0.45)]">
-              <Image src={images.hero.src} alt={images.hero.alt} fill priority sizes="(min-width: 768px) 45vw, 90vw" className="hero-photo object-cover" />
-            </div>
-            <div className="hero-float absolute -bottom-5 -left-3 sm:-left-8">
-              <div className="hero-bob rounded-2xl bg-white px-5 py-4 shadow-lg ring-1 ring-horizon">
-                <p className="font-display text-3xl text-harbour">48h</p>
-                <p className="text-sm text-muted">notice is all I need</p>
-              </div>
-            </div>
-          </div>
+          <p className="mt-6 text-[15px] text-muted">
+            Ingredients and cleanup included. Book with {info.leadTimeHours} hours&apos; notice and pay by MoMo or card.
+          </p>
+        </div>
+        <div className="relative aspect-[4/3] bg-raised lg:aspect-auto lg:min-h-[min(calc(100dvh-4rem),47.5rem)]">
+          <Image src={images.hero.src} alt={images.hero.alt} fill preload sizes="(min-width: 1024px) 47vw, 100vw" className="object-cover" />
         </div>
       </section>
 
       {/* Services */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6" aria-labelledby="services">
-        <Reveal className="flex flex-wrap items-end justify-between gap-6">
-          <SectionHeading eyebrow="Services" title="Food for every kind of table" body="Every booking includes ingredients, cooking, serving and leaving your kitchen spotless." />
-          <Link href="/services" className="inline-flex items-center gap-1 font-semibold text-harbour hover:underline">Sample menus <ArrowRight className="size-4" /></Link>
-        </Reveal>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {services.map((s, i) => (
-            <Reveal key={s.slug} delay={i}>
-              <ServiceCard service={s} />
-            </Reveal>
-          ))}
+      <section className={cn(container, "py-16 sm:py-24")}>
+        <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+          <SectionHeading title="Food for every kind of table" body="Every booking includes ingredients, cooking, serving and leaving your kitchen spotless." />
+          <Link href="/services" className={textLink}>Sample menus and full prices</Link>
+        </div>
+        <div className="mt-10">
+          <ServiceList services={services} />
         </div>
       </section>
 
       {/* How it works */}
-      <section className="bg-sky-mist/60 py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal>
-            <SectionHeading eyebrow="How it works" title="Three steps to a great meal" center />
-          </Reveal>
+      <section className="bg-raised py-16 sm:py-20">
+        <div className={container}>
+          <SectionHeading title="How booking works" />
           <HowItWorks />
         </div>
       </section>
 
       {/* About */}
-      <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 md:grid-cols-2">
-        <Reveal>
-          <div className="relative aspect-[5/6] overflow-hidden rounded-[2rem]">
-            <Image src={images.sonia.src} alt={images.sonia.alt} fill sizes="(min-width: 768px) 45vw, 100vw" className="object-cover" />
-          </div>
-        </Reveal>
-        <Reveal delay={1}>
-          <SectionHeading eyebrow="About Sonia" title="Cooking is how I take care of people" />
+      <section className={cn(container, "grid items-center gap-x-16 gap-y-10 py-16 sm:py-24 md:grid-cols-[1.1fr_1fr]")}>
+        <div>
+          <SectionHeading title="Cooking is how I take care of people" />
           <p className="mt-6 text-lg text-muted">
             I grew up in a busy Accra kitchen where food was how we celebrated, comforted and welcomed people. Today I
             cook Ghanaian classics, Southern soul food and international dishes with the best local produce, and I love making a dinner at
@@ -129,42 +100,38 @@ export default async function HomePage() {
           <p className="mt-4 text-lg text-muted">
             Every menu is personal. Tell me who&apos;s coming, what you love and what you can&apos;t eat, and I&apos;ll take it from there.
           </p>
-          <Button asChild variant="outline" className="mt-8">
-            <Link href="/about">More about me</Link>
-          </Button>
-        </Reveal>
+          <p className="mt-8">
+            <Link href="/about" className={textLink}>More about me</Link>
+          </p>
+        </div>
+        <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] bg-raised">
+          <Image src={(images.sonia ?? images.table).src} alt={(images.sonia ?? images.table).alt} fill sizes="(min-width: 768px) 45vw, 100vw" className="object-cover" />
+        </div>
       </section>
 
       <Testimonials />
 
       {/* Signature dishes */}
-      <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <Reveal className="flex flex-wrap items-end justify-between gap-6">
+      <section className={cn(container, "border-t border-horizon py-16 sm:py-24")}>
+        <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
           <SectionHeading
-            eyebrow="On the menu"
-            title="Ghanaian favourites & soul food classics"
+            title="Ghanaian favourites and soul food classics"
             body="The Ghanaian dishes I grew up on and the soul food everyone asks for, made with fresh produce. Mix them into any menu or build a whole night around them."
           />
-          <Link href="/book" className="inline-flex items-center gap-1 font-semibold text-harbour hover:underline">Book a dinner <ArrowRight className="size-4" /></Link>
-        </Reveal>
-        <Reveal delay={1}>
-          <DishTabs
-            cuisines={[
-              { id: "ghanaian", label: "Ghanaian", dishes: ghanaianDishes, more: moreGhanaianDishes },
-              { id: "soul-food", label: "Soul food", dishes: soulFoodDishes, more: moreSoulFoodDishes },
-            ]}
-          />
-        </Reveal>
+          <Link href="/book" className={textLink}>Book a dinner</Link>
+        </div>
+        <DishTabs
+          cuisines={[
+            { id: "ghanaian", label: "Ghanaian", dishes: ghanaianDishes, more: moreGhanaianDishes },
+            { id: "soul-food", label: "Soul food", dishes: soulFoodDishes, more: moreSoulFoodDishes },
+          ]}
+        />
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="mx-auto max-w-3xl scroll-mt-24 px-4 py-16 sm:px-6">
-        <Reveal>
-          <SectionHeading eyebrow="FAQ" title="Good to know" center />
-        </Reveal>
-        <Reveal delay={1}>
-          <Faq />
-        </Reveal>
+      <section id="faq" className={cn(container, "grid scroll-mt-24 gap-x-16 gap-y-8 border-t border-horizon pt-16 sm:pt-24 md:grid-cols-[1fr_2fr]")}>
+        <SectionHeading title="Good to know" body="The questions people ask before they book." />
+        <Faq />
       </section>
 
       <CtaBand />

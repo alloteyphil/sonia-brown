@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { images } from "@/brand/images";
-import { CtaBand, Gallery, SectionHeading } from "@/components/site/sections";
-import { Reveal } from "@/components/site/reveal";
+import { container, CtaBand, Gallery, SectionHeading } from "@/components/site/sections";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "About Sonia",
@@ -16,35 +16,37 @@ const values = [
 ];
 
 export default function AboutPage() {
+  const photo = images.sonia ?? images.table;
   return (
     <>
-      <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 pt-14 sm:px-6 md:grid-cols-[1fr_1.1fr]">
-        <div className="hero-frame relative aspect-[5/6] overflow-hidden rounded-t-[999px] rounded-b-[2rem]">
-          <Image src={images.sonia.src} alt={images.sonia.alt} fill priority sizes="(min-width: 768px) 40vw, 100vw" className="hero-photo object-cover" />
-        </div>
-        <div className="hero-rise hero-rise-2">
-          <SectionHeading eyebrow="About" title="Hi, I'm Sonia." />
-          <div className="mt-6 space-y-4 text-lg text-muted">
+      <section className={cn(container, "grid items-center gap-x-16 gap-y-10 pt-12 sm:pt-16 md:grid-cols-[1.1fr_1fr]")}>
+        <div className="enter">
+          <h1 className="text-4xl leading-[1.1] sm:text-5xl">Hi, I&apos;m Sonia</h1>
+          <div className="mt-6 max-w-xl space-y-4 text-lg text-muted">
             <p>I learned to cook beside my grandmother, measuring by eye and tasting everything. Food was how our family said welcome, congratulations and I&apos;m sorry.</p>
             <p>After years cooking in restaurant and hotel kitchens around Accra, I started cooking privately so I could do what I love most: get to know the people I&apos;m feeding.</p>
             <p>My food is Ghanaian at heart, with a big helping of Southern soul food and a lot of curiosity: familiar flavours, beautifully plated, with a few surprises. Whether it&apos;s dinner for two or a naming ceremony for sixty, I&apos;ll make it feel effortless for you.</p>
           </div>
         </div>
-      </section>
-      <section className="mx-auto max-w-6xl px-4 pt-20 sm:px-6">
-        <div className="grid gap-6 md:grid-cols-3">
-          {values.map((v, i) => (
-            <Reveal key={v.title} delay={i} className="rounded-[var(--radius-card)] bg-sky-mist/60 p-7">
-              <h2 className="text-2xl">{v.title}</h2>
-              <p className="mt-2 text-muted">{v.body}</p>
-            </Reveal>
-          ))}
+        <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] bg-raised">
+          <Image src={photo.src} alt={photo.alt} fill preload sizes="(min-width: 768px) 45vw, 100vw" className="object-cover" />
         </div>
       </section>
-      <section className="mx-auto max-w-6xl px-4 pt-20 sm:px-6">
-        <Reveal>
-          <SectionHeading eyebrow="Gallery" title="Food I love to cook" />
-        </Reveal>
+
+      <section className={cn(container, "pt-16 sm:pt-24")}>
+        <h2 className="sr-only">How I work</h2>
+        <dl className="grid gap-x-10 gap-y-8 md:grid-cols-3">
+          {values.map((v) => (
+            <div key={v.title} className="border-t border-night-sky/15 pt-5">
+              <dt className="font-display text-xl">{v.title}</dt>
+              <dd className="mt-2 text-muted">{v.body}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section className={cn(container, "pt-16 sm:pt-24")}>
+        <SectionHeading title="Food I love to cook" />
         <Gallery />
       </section>
       <CtaBand />

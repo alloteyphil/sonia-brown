@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
 import { addDays, parse, startOfMonth } from "date-fns";
-import { ArrowLeft, ArrowRight, CalendarDays, Check, Clock, Loader2, Lock, Users, UtensilsCrossed, Wallet } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Loader2, Lock } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
@@ -157,8 +157,8 @@ export function BookingWizard() {
         <ol className="mb-8 flex gap-2" aria-label="Booking steps">
           {STEPS.map((label, i) => (
             <li key={label} className="flex-1">
-              <div className={cn("h-1.5 rounded-full", i <= currentStep ? "bg-harbour" : "bg-horizon")} />
-              <p className={cn("mt-2 hidden text-xs font-semibold sm:block", i === currentStep ? "text-harbour" : "text-muted")}>
+              <div className={cn("h-1 rounded-full transition-colors duration-200", i <= currentStep ? "bg-harbour" : "bg-night-sky/10")} />
+              <p className={cn("mt-2 hidden text-[13px] sm:block", i === currentStep ? "font-medium text-night-sky" : "text-muted")}>
                 {i + 1}. {label}
               </p>
             </li>
@@ -184,21 +184,18 @@ export function BookingWizard() {
                     go(1);
                   }}
                   className={cn(
-                    "flex w-full items-start gap-4 rounded-2xl border bg-white p-5 text-left transition hover:border-harbour",
-                    serviceId === s._id ? "border-harbour ring-3 ring-sky/40" : "border-horizon",
+                    "flex w-full items-start gap-6 rounded-[var(--radius-card)] border bg-white p-5 text-left transition-colors duration-150 hover:border-harbour sm:p-6",
+                    serviceId === s._id ? "border-harbour ring-2 ring-sky/50" : "border-horizon",
                   )}
                 >
                   <div className="flex-1">
                     <p className="font-display text-2xl">{s.name}</p>
                     <p className="mt-1 text-muted">{s.description}</p>
-                    <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-night-sky/75">
-                      <span className="flex items-center gap-1"><Users className="size-4 text-harbour" />{s.minGuests}–{s.maxGuests} guests</span>
-                      <span className="flex items-center gap-1"><Clock className="size-4 text-harbour" />{s.durationMinutes / 60}h</span>
-                    </p>
+                    <p className="mt-3 text-sm text-muted">{s.minGuests} to {s.maxGuests} guests, about {s.durationMinutes / 60} hours</p>
                   </div>
                   <div className="text-right text-sm text-muted">
-                    from
-                    <p className="font-display text-xl text-night-sky">{formatMoney(s.basePrice + s.pricePerGuest * s.minGuests)}</p>
+                    From
+                    <p className="text-xl font-medium tabular-nums text-night-sky">{formatMoney(s.basePrice + s.pricePerGuest * s.minGuests)}</p>
                   </div>
                 </button>
               ))}
@@ -211,7 +208,7 @@ export function BookingWizard() {
             <h2 className="text-3xl">Pick a date and time</h2>
             <p className="mt-1 text-muted">Showing dates I&apos;m free for a {service.name.toLowerCase()} ({service.durationMinutes / 60} hours).</p>
             <div className="mt-6 grid gap-6 md:grid-cols-[1.2fr_1fr]">
-              <div className="rounded-2xl border border-horizon bg-white p-5">
+              <div className="rounded-[var(--radius-card)] border border-horizon bg-white p-5">
                 <MonthCalendar
                   month={month}
                   onMonthChange={setMonth}
@@ -226,15 +223,15 @@ export function BookingWizard() {
                   loading={days === undefined}
                 />
                 {days && days.length === 0 && (
-                  <p className="mt-4 rounded-xl bg-sky-mist p-3 text-sm">
+                  <p className="mt-4 rounded-[10px] bg-raised p-3 text-sm">
                     I&apos;m fully booked for now.{" "}
-                    {info && <a className="font-semibold text-harbour underline" href={whatsappLink(info.whatsapp, "Hi Sonia, do you have any dates coming up?")}>Message me on WhatsApp</a>}{" "}
+                    {info && <a className="font-medium text-harbour-deep underline underline-offset-4" href={whatsappLink(info.whatsapp, "Hi Sonia, do you have any dates coming up?")}>Message me on WhatsApp</a>}{" "}
                     and I&apos;ll see what I can do.
                   </p>
                 )}
               </div>
-              <div className="rounded-2xl border border-horizon bg-white p-5">
-                <p className="font-semibold">{date ? formatDateLong(date) : "Choose a date first"}</p>
+              <div className="rounded-[var(--radius-card)] border border-horizon bg-white p-5">
+                <p className="font-medium">{date ? formatDateLong(date) : "Choose a date first"}</p>
                 {date && slots === undefined && <Skeleton className="mt-4 h-32" />}
                 {date && slots && slots.length === 0 && <p className="mt-3 text-sm text-muted">That day just filled up. Try another date.</p>}
                 {date && slots && slots.length > 0 && (
@@ -247,7 +244,7 @@ export function BookingWizard() {
                         aria-checked={time === s.start}
                         onClick={() => setTime(s.start)}
                         className={cn(
-                          "rounded-xl border px-3 py-2.5 text-[15px] font-semibold transition",
+                          "h-11 rounded-[10px] border px-3 text-[15px] font-medium tabular-nums transition-colors duration-150",
                           time === s.start ? "border-harbour bg-harbour text-white" : "border-horizon hover:border-harbour",
                         )}
                       >
@@ -256,7 +253,7 @@ export function BookingWizard() {
                     ))}
                   </div>
                 )}
-                <p className="mt-4 text-xs text-muted">Times are start times in Accra (GMT). I arrive about an hour before to set up.</p>
+                <p className="mt-4 text-[13px] text-muted">Times are start times in Accra (GMT). I arrive about an hour before to set up.</p>
               </div>
             </div>
             <div className="mt-8 flex justify-between">
@@ -269,7 +266,7 @@ export function BookingWizard() {
         {currentStep === 2 && service && (
           <form onSubmit={onDetails} noValidate>
             <h2 className="text-3xl">Tell me about your event</h2>
-            <div className="mt-6 grid gap-5 rounded-2xl border border-horizon bg-white p-5 sm:grid-cols-2 sm:p-6">
+            <div className="mt-6 grid gap-5 rounded-[var(--radius-card)] border border-horizon bg-white p-5 sm:grid-cols-2 sm:p-6">
               <Field label={`Number of guests (${service.minGuests}–${service.maxGuests})`} htmlFor="guests" error={form.formState.errors.guests?.message}>
                 <Input id="guests" type="number" inputMode="numeric" min={service.minGuests} max={service.maxGuests} aria-invalid={!!form.formState.errors.guests} {...form.register("guests")} />
               </Field>
@@ -285,7 +282,7 @@ export function BookingWizard() {
               <Field label="Anything else? (optional)" htmlFor="notes" className="sm:col-span-2">
                 <Textarea id="notes" rows={3} placeholder="Favourite dishes, kitchen access, parking…" {...form.register("notes")} />
               </Field>
-              <div className="sm:col-span-2 border-t border-horizon pt-5"><p className="font-semibold">Your contact details</p></div>
+              <div className="border-t border-horizon pt-5 sm:col-span-2"><p className="font-medium">Your contact details</p></div>
               <Field label="Full name" htmlFor="name" error={form.formState.errors.name?.message} className="sm:col-span-2">
                 <Input id="name" autoComplete="name" aria-invalid={!!form.formState.errors.name} {...form.register("name")} />
               </Field>
@@ -306,54 +303,54 @@ export function BookingWizard() {
         {currentStep === 3 && service && date && time && details && quote && (
           <section>
             <h2 className="text-3xl">Review and pay</h2>
-            <div className="mt-6 rounded-2xl border border-horizon bg-white p-5 sm:p-6">
+            <div className="mt-6 rounded-[var(--radius-card)] border border-horizon bg-white p-5 sm:p-6">
               <table className="w-full text-[15px]">
                 <caption className="sr-only">Price breakdown</caption>
                 <tbody>
                   {quote.lineItems.map((li) => (
                     <tr key={li.label}>
                       <td className="py-1.5 text-muted">{li.label}{li.quantity > 1 && ` × ${li.quantity} (${formatMoney(li.unitAmount)} each)`}</td>
-                      <td className="py-1.5 text-right">{formatMoney(li.amount)}</td>
+                      <td className="py-1.5 text-right tabular-nums">{formatMoney(li.amount)}</td>
                     </tr>
                   ))}
                   <tr className="border-t border-horizon">
-                    <td className="pt-3 font-semibold">Total</td>
-                    <td className="pt-3 text-right font-display text-2xl">{formatMoney(quote.total)}</td>
+                    <td className="pt-3 font-medium">Total</td>
+                    <td className="pt-3 text-right text-2xl font-medium tabular-nums">{formatMoney(quote.total)}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
             <fieldset className="mt-6">
-              <legend className="font-semibold">How would you like to pay?</legend>
+              <legend className="font-medium">How would you like to pay?</legend>
               <div className="mt-3 grid gap-3">
                 {([
                   { v: "deposit", title: `Pay ${depositPercent}% deposit now`, amount: quote.depositDue, body: "Locks in your date instantly. Balance due on the day." },
-                  { v: "full", title: "Pay in full now", amount: quote.total, body: "Nothing more to think about." },
+                  { v: "full", title: "Pay in full now", amount: quote.total, body: "Nothing left to pay on the day." },
                   { v: "later", title: "Pay later / in person", amount: null, body: "Send a request. I'll confirm, then you pay by MoMo, transfer or cash." },
                 ] as const).map((o) => (
                   <label
                     key={o.v}
                     className={cn(
-                      "flex cursor-pointer items-start gap-4 rounded-2xl border bg-white p-4 transition",
-                      payment === o.v ? "border-harbour ring-3 ring-sky/40" : "border-horizon hover:border-harbour",
+                      "flex cursor-pointer items-start gap-4 rounded-[var(--radius-card)] border bg-white p-4 transition-colors duration-150",
+                      payment === o.v ? "border-harbour ring-2 ring-sky/50" : "border-horizon hover:border-harbour",
                     )}
                   >
                     <input type="radio" name="payment" value={o.v} checked={payment === o.v} onChange={() => setPayment(o.v)} className="mt-1 size-4 accent-harbour" />
                     <span className="flex-1">
-                      <span className="block font-semibold">{o.title}</span>
+                      <span className="block font-medium">{o.title}</span>
                       <span className="block text-sm text-muted">{o.body}</span>
                     </span>
-                    {o.amount !== null && <span className="font-display text-xl">{formatMoney(o.amount)}</span>}
+                    {o.amount !== null && <span className="text-xl font-medium tabular-nums">{formatMoney(o.amount)}</span>}
                   </label>
                 ))}
               </div>
             </fieldset>
 
-            {info && <p className="mt-5 text-sm text-muted"><strong className="text-night-sky">Cancellation policy:</strong> {info.cancellationPolicy}</p>}
+            {info && <p className="mt-5 text-sm text-muted"><span className="font-medium text-night-sky">Cancellation policy:</span> {info.cancellationPolicy}</p>}
 
             {submitError && (
-              <div role="alert" className="mt-5 rounded-xl border border-ember/30 bg-rose-50 p-4 text-sm text-ember">
+              <div role="alert" className="mt-5 rounded-[10px] border border-ember/30 bg-rose-50 p-4 text-sm text-ember">
                 {submitError}
                 {!time && <Button variant="outline" size="sm" className="ml-3" onClick={() => go(1)}>Pick another time</Button>}
               </div>
@@ -367,31 +364,46 @@ export function BookingWizard() {
               </Button>
             </div>
             {payment !== "later" && (
-              <p className="mt-3 text-right text-xs text-muted">Card or mobile money via Paystack. Your slot is held for 15 minutes while you pay.</p>
+              <p className="mt-3 text-right text-[13px] text-muted">Card or mobile money via Paystack. Your slot is held for 15 minutes while you pay.</p>
             )}
           </section>
         )}
       </div>
 
-      {/* Summary sidebar */}
-      <aside className="h-fit rounded-2xl bg-night-sky p-6 text-white lg:sticky lg:top-24">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky">Your booking</p>
-        <dl className="mt-4 space-y-3 text-[15px]">
-          <div className="flex gap-3"><Wallet className="mt-0.5 size-4 text-sky" /><div><dt className="sr-only">Service</dt><dd>{service?.name ?? "Choose a service"}</dd></div></div>
-          {presetMenu && (!service || service.slug === presetMenu.service) && (
-            <div className="flex gap-3"><UtensilsCrossed className="mt-0.5 size-4 text-sky" /><div><dt className="sr-only">Menu</dt><dd>Starting from &ldquo;{presetMenu.title}&rdquo;</dd></div></div>
-          )}
-          <div className="flex gap-3"><CalendarDays className="mt-0.5 size-4 text-sky" /><div><dt className="sr-only">When</dt><dd>{date ? `${formatDateLong(date)}${time ? `, ${formatTime12(time)}` : ""}` : "Pick a date"}</dd></div></div>
-          <div className="flex gap-3"><Users className="mt-0.5 size-4 text-sky" /><div><dt className="sr-only">Guests</dt><dd>{details ? `${details.guests} guests` : "Guests"}</dd></div></div>
-        </dl>
-        {quote && (
-          <div className="mt-5 border-t border-white/15 pt-4">
-            <p className="text-sm text-white/70">Total</p>
-            <p className="font-display text-3xl">{formatMoney(quote.total)}</p>
+      {/* Summary: a booking slip, set like one of Sonia's menu cards. */}
+      <aside className="menu-card h-fit p-7 lg:sticky lg:top-24">
+        <p className="font-display text-xl">Your booking</p>
+        <dl className="mt-3 divide-y divide-horizon text-[15px]">
+          <div className="flex justify-between gap-6 py-3">
+            <dt className="text-muted">Service</dt>
+            <dd className={cn("text-right", !service && "text-muted")}>{service?.name ?? "Not chosen yet"}</dd>
           </div>
-        )}
+          {presetMenu && (!service || service.slug === presetMenu.service) && (
+            <div className="flex justify-between gap-6 py-3">
+              <dt className="text-muted">Menu</dt>
+              <dd className="text-right">Starting from &ldquo;{presetMenu.title}&rdquo;</dd>
+            </div>
+          )}
+          <div className="flex justify-between gap-6 py-3">
+            <dt className="text-muted">When</dt>
+            <dd className={cn("text-right", !date && "text-muted")}>{date ? `${formatDateLong(date)}${time ? `, ${formatTime12(time)}` : ""}` : "Not chosen yet"}</dd>
+          </div>
+          <div className="flex justify-between gap-6 py-3">
+            <dt className="text-muted">Guests</dt>
+            <dd className={cn("text-right tabular-nums", !details && "text-muted")}>{details ? details.guests : "Not set yet"}</dd>
+          </div>
+          {quote && (
+            <div className="flex items-baseline justify-between gap-6 pt-4">
+              <dt className="font-medium">Total</dt>
+              <dd className="text-2xl font-medium tabular-nums">{formatMoney(quote.total)}</dd>
+            </div>
+          )}
+        </dl>
         {info && (
-          <a className="mt-5 inline-block text-sm text-sky underline" href={whatsappLink(info.whatsapp, "Hi Sonia, I have a question about booking.")}>
+          <a
+            className="mt-5 inline-block text-sm font-medium text-harbour-deep underline underline-offset-4 transition-colors hover:text-night-sky"
+            href={whatsappLink(info.whatsapp, "Hi Sonia, I have a question about booking.")}
+          >
             Questions? Chat on WhatsApp
           </a>
         )}
