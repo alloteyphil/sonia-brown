@@ -8,6 +8,7 @@ import { PageTitle } from "@/components/dashboard/shell";
 import { Button } from "@/components/ui/button";
 import { Card, Skeleton } from "@/components/ui/card";
 import { Field, Input, Textarea } from "@/components/ui/field";
+import { toast } from "@/components/ui/toaster";
 import { errorMessage } from "@/lib/utils";
 
 type S = FunctionArgs<typeof api.admin.saveSettings>;
@@ -22,7 +23,6 @@ function SettingsForm({ initial }: { initial: S }) {
   const save = useMutation(api.admin.saveSettings);
   const [s, setS] = useState<S>(initial);
   const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState<{ ok: boolean; text: string }>();
   const text = (k: keyof S) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setS({ ...s, [k]: e.target.value });
   const toggle = (k: "autoConfirmPaid" | "notifyOnNewBooking" | "sendClientReminders", label: string, hint: string) => (
     <label className="flex items-start gap-3 rounded-xl p-2 hover:bg-cloud">
@@ -71,12 +71,11 @@ function SettingsForm({ initial }: { initial: S }) {
           disabled={busy}
           onClick={async () => {
             setBusy(true);
-            setMsg(undefined);
             try {
               await save(s);
-              setMsg({ ok: true, text: "Settings saved." });
+              toast.success("Settings saved.");
             } catch (e) {
-              setMsg({ ok: false, text: errorMessage(e) });
+              toast.error(errorMessage(e));
             } finally {
               setBusy(false);
             }
@@ -84,7 +83,6 @@ function SettingsForm({ initial }: { initial: S }) {
         >
           {busy && <Loader2 className="animate-spin" />}Save settings
         </Button>
-        {msg && <p role="status" className={msg.ok ? "text-meadow" : "text-ember"}>{msg.text}</p>}
       </div>
     </>
   );

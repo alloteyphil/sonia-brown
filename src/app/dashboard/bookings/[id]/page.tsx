@@ -1,15 +1,17 @@
 "use client";
 import { use, useState } from "react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { useAction, useMutation, useQuery } from "convex/react";
 import {
   AlertTriangle, ArrowLeft, CalendarClock, Check, CircleSlash, FileText, Mail, MapPin, MessageCircle, Phone, Plus, RotateCcw, Trash2, UtensilsCrossed, X, Loader2,
 } from "lucide-react";
 import { api } from "../../../../../convex/_generated/api";
-import type { Id } from "../../../../../convex/_generated/dataModel";
 import type { BookingDetail } from "@/components/dashboard/types";
 import { Button } from "@/components/ui/button";
-import { Card, Skeleton, EmptyState } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { PageSpinner } from "@/components/ui/spinner";
+import { toast } from "@/components/ui/toaster";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { StatusBadge, PaymentBadge } from "@/components/ui/status-badge";
@@ -26,13 +28,20 @@ const actionMeta: Record<Exclude<BookingStatus, "pending">, { label: string; ico
   cancelled: { label: "Cancel booking", icon: CircleSlash, variant: "outline" },
 };
 
+const statusToast: Record<Exclude<BookingStatus, "pending">, string> = {
+  confirmed: "Booking confirmed. The client has been emailed.",
+  completed: "Booking marked as completed.",
+  declined: "Request declined. The client has been emailed.",
+  cancelled: "Booking cancelled. The client has been emailed.",
+};
+
 const methodLabel: Record<string, string> = { card: "Card", mobile_money: "Mobile money", cash: "Cash", bank_transfer: "Bank transfer", other: "Other" };
 
 export default function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const booking = useQuery(api.dashboard.bookingDetail, { id: id as Id<"bookings"> });
-  if (booking === undefined) return <Skeleton className="h-[600px]" />;
-  if (booking === null) return <EmptyState title="Booking not found" action={<Button asChild><Link href="/dashboard/bookings">Back to bookings</Link></Button>} />;
+  const booking = useQuery(api.dashboard.bookingDetail, { id });
+  if (booking === undefined) return <PageSpinner label="Loading booking" />;
+  if (booking === null) notFound();
   return <Detail b={booking} />;
 }
 
@@ -41,16 +50,15 @@ function Detail({ b }: { b: BookingDetail }) {
   const clearAttention = useMutation(api.dashboard.clearAttention);
   const [reasonFor, setReasonFor] = useState<"declined" | "cancelled" | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
-  const [error, setError] = useState<string>();
 
   async function changeStatus(status: "confirmed" | "completed" | "declined" | "cancelled", reason?: string) {
     setBusy(status);
-    setError(undefined);
     try {
       await setStatus({ id: b._id, status, reason });
       setReasonFor(null);
+      toast.success(statusToast[status]);
     } catch (e) {
-      setError(errorMessage(e));
+      toast.error(errorMessage(e));
     } finally {
       setBusy(null);
     }
@@ -91,10 +99,15 @@ function Detail({ b }: { b: BookingDetail }) {
         <div className="mb-4 flex items-start gap-3 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-amber-900">
           <AlertTriangle className="mt-0.5 size-5 shrink-0" />
           <p className="flex-1 text-sm">{b.needsAttention}</p>
-          <Button size="sm" variant="outline" onClick={() => clearAttention({ id: b._id })}>Resolved</Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => clearAttention({ id: b._id }).then(() => toast.success("Marked as resolved."), (e) => toast.error(errorMessage(e)))}
+          >
+            Resolved
+          </Button>
         </div>
       )}
-      {error && <p role="alert" className="mb-4 rounded-xl bg-rose-50 p-3 text-sm text-ember">{error}</p>}
 
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <div className="space-y-6">
@@ -203,6 +216,7 @@ function RescheduleDialog({ b }: { b: BookingDetail }) {
             try {
               await reschedule({ id: b._id, date, startTime: time, override });
               setOpen(false);
+              toast.success(`Moved to ${formatDateLong(date)}, ${formatTime12(time)}. The client has been emailed.`);
             } catch (e) {
               setErr(errorMessage(e));
             } finally {
@@ -252,6 +266,7 @@ function PaymentsCard({ b }: { b: BookingDetail }) {
         await record({ id: b._id, kind: mode!, amount: value, method: method as "cash", paidAt: toEpoch(date, "12:00"), note: note || undefined });
       }
       setMode(null);
+      toast.success(mode === "refund" ? `Refund of ${formatMoney(value)} recorded.` : `Payment of ${formatMoney(value)} recorded.`);
     } catch (e) {
       setErr(errorMessage(e));
     } finally {
@@ -281,7 +296,7 @@ function PaymentsCard({ b }: { b: BookingDetail }) {
               </div>
               <p className={p.kind === "refund" ? "font-semibold text-ember" : "font-semibold text-meadow"}>{p.kind === "refund" ? "−" : "+"}{formatMoney(p.amount)}</p>
               {p.provider === "manual" && (
-                <button className="rounded-full p-2 text-muted hover:bg-rose-50 hover:text-ember" aria-label="Delete payment" onClick={() => confirm("Delete this payment record?") && remove({ paymentId: p._id })}><Trash2 className="size-4" /></button>
+                <button className="rounded-full p-2 text-muted hover:bg-rose-50 hover:text-ember" aria-label="Delete payment" onClick={() => confirm("Delete this payment record?") && remove({ paymentId: p._id }).then(() => toast.success("Payment record deleted."), (e) => toast.error(errorMessage(e)))}><Trash2 className="size-4" /></button>
               )}
             </li>
           ))}
@@ -328,8 +343,13 @@ function NotesCard({ b }: { b: BookingDetail }) {
         onBlur={async () => {
           if (value === (b.internalNotes ?? "")) return;
           setState("saving");
-          await save({ id: b._id, internalNotes: value });
-          setState("saved");
+          try {
+            await save({ id: b._id, internalNotes: value });
+            setState("saved");
+          } catch (e) {
+            setState("idle");
+            toast.error(`Notes not saved: ${errorMessage(e)}`);
+          }
         }}
       />
     </Card>

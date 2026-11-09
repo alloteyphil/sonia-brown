@@ -3,9 +3,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useConvexAuth, useQuery } from "convex/react";
-import { CalendarDays, LayoutDashboard, ListChecks, LogOut, Settings, Sliders, Users, UtensilsCrossed, Loader2 } from "lucide-react";
+import { CalendarDays, LayoutDashboard, ListChecks, LogOut, Settings, Sliders, Users, UtensilsCrossed } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import { Wordmark, Monogram } from "@/components/site/logo";
+import { PageSpinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +32,7 @@ function Gate({ children }: { children: React.ReactNode }) {
     if (!sessionPending && !session) router.replace("/sign-in");
   }, [sessionPending, session, router]);
 
-  const spinner = <div className="flex min-h-[60vh] items-center justify-center"><Loader2 className="size-8 animate-spin text-harbour" /></div>;
+  const spinner = <PageSpinner />;
   if (sessionPending || !session || isLoading) return spinner;
   if (!isAuthenticated) {
     return <Notice title="Can't reach the database" body="You're signed in, but Convex didn't accept the session. Refresh once — if it keeps failing, check NEXT_PUBLIC_CONVEX_SITE_URL." />;

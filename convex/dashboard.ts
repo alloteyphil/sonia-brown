@@ -128,9 +128,11 @@ export const listBookings = query({
 });
 
 export const bookingDetail = query({
-  args: { id: v.id("bookings") },
-  handler: async (ctx, { id }) => {
+  args: { id: v.string() },
+  handler: async (ctx, args) => {
     await requireOwner(ctx);
+    const id = ctx.db.normalizeId("bookings", args.id);
+    if (!id) return null;
     const b = await ctx.db.get(id);
     if (!b) return null;
     const [base, payments, service, settings] = await Promise.all([

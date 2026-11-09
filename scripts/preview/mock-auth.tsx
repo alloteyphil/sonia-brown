@@ -6,4 +6,5 @@ export const createAuthClient = () => ({
   signIn: { email: async () => ({ error: null }) },
   signUp: { email: async () => ({ error: null }) },
   signOut: async () => {},
+  useSession: () => ({ data: { user: { email: "sonia@example.com" } }, isPending: false }),
 });

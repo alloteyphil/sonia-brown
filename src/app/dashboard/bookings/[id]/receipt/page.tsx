@@ -5,9 +5,9 @@ import { useQuery } from "convex/react";
 import { format } from "date-fns";
 import { ArrowLeft, Printer } from "lucide-react";
 import { api } from "../../../../../../convex/_generated/api";
-import type { Id } from "../../../../../../convex/_generated/dataModel";
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/card";
+import { PageSpinner } from "@/components/ui/spinner";
 import { Wordmark } from "@/components/site/logo";
 import { formatMoney } from "@/lib/domain/money";
 import { formatDateLong, formatTime12 } from "@/lib/domain/time";
@@ -17,8 +17,9 @@ const methodLabel: Record<string, string> = { card: "Card", mobile_money: "Mobil
 
 export default function ReceiptPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const b = useQuery(api.dashboard.bookingDetail, { id: id as Id<"bookings"> });
-  if (!b) return <Skeleton className="h-[700px]" />;
+  const b = useQuery(api.dashboard.bookingDetail, { id });
+  if (b === undefined) return <PageSpinner label="Loading receipt" />;
+  if (b === null) notFound();
   const isPaid = b.balance === 0;
   const rows = b.payments.filter((p) => p.status === "succeeded");
   return (

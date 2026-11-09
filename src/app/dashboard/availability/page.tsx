@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, Skeleton } from "@/components/ui/card";
 import { Field, Input } from "@/components/ui/field";
 import { formatDateLong, todayInAccra } from "@/lib/domain/time";
+import { toast } from "@/components/ui/toaster";
 import { errorMessage } from "@/lib/utils";
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -36,8 +37,8 @@ function AvailabilityForm({ data }: { data: AvailabilityData }) {
   });
   const [blockDate, setBlockDate] = useState("");
   const [blockReason, setBlockReason] = useState("");
-  const [msg, setMsg] = useState<{ ok: boolean; text: string }>();
   const [busy, setBusy] = useState(false);
+  const [blocking, setBlocking] = useState(false);
 
 
   const order = [1, 2, 3, 4, 5, 6, 0];
@@ -45,7 +46,6 @@ function AvailabilityForm({ data }: { data: AvailabilityData }) {
 
   async function submit() {
     setBusy(true);
-    setMsg(undefined);
     try {
       await save({
         rules,
@@ -55,9 +55,9 @@ function AvailabilityForm({ data }: { data: AvailabilityData }) {
         slotIntervalMinutes: Number(nums.slotIntervalMinutes),
         maxAdvanceDays: Number(nums.maxAdvanceDays),
       });
-      setMsg({ ok: true, text: "Saved. The booking calendar has updated." });
+      toast.success("Saved. The booking calendar has updated.");
     } catch (e) {
-      setMsg({ ok: false, text: errorMessage(e) });
+      toast.error(errorMessage(e));
     } finally {
       setBusy(false);
     }
@@ -105,7 +105,6 @@ function AvailabilityForm({ data }: { data: AvailabilityData }) {
           </Card>
           <div className="flex items-center gap-4">
             <Button size="lg" onClick={submit} disabled={busy}>{busy && <Loader2 className="animate-spin" />}Save availability</Button>
-            {msg && <p role="status" className={msg.ok ? "text-meadow" : "text-ember"}>{msg.text}</p>}
           </div>
         </div>
 
@@ -117,21 +116,29 @@ function AvailabilityForm({ data }: { data: AvailabilityData }) {
             onSubmit={async (e) => {
               e.preventDefault();
               if (!blockDate) return;
-              await block({ date: blockDate, reason: blockReason || undefined });
-              setBlockDate("");
-              setBlockReason("");
+              setBlocking(true);
+              try {
+                await block({ date: blockDate, reason: blockReason || undefined });
+                toast.success(`${formatDateLong(blockDate)} is blocked.`);
+                setBlockDate("");
+                setBlockReason("");
+              } catch (err) {
+                toast.error(errorMessage(err));
+              } finally {
+                setBlocking(false);
+              }
             }}
           >
             <Field label="Date" htmlFor="bd"><Input id="bd" type="date" min={todayInAccra()} value={blockDate} onChange={(e) => setBlockDate(e.target.value)} required /></Field>
             <Field label="Reason (private)" htmlFor="br"><Input id="br" value={blockReason} onChange={(e) => setBlockReason(e.target.value)} placeholder="Family wedding" /></Field>
-            <Button type="submit" variant="dark"><Ban />Block date</Button>
+            <Button type="submit" variant="dark" disabled={blocking}>{blocking ? <Loader2 className="animate-spin" /> : <Ban />}Block date</Button>
           </form>
           <ul className="mt-5 divide-y divide-horizon">
             {data.blocked.filter((b) => b.date >= todayInAccra()).length === 0 && <li className="py-3 text-sm text-muted">No upcoming blocked dates.</li>}
             {data.blocked.filter((b) => b.date >= todayInAccra()).map((b) => (
               <li key={b._id} className="flex items-center justify-between gap-3 py-3">
                 <div><p className="font-semibold">{formatDateLong(b.date)}</p>{b.reason && <p className="text-sm text-muted">{b.reason}</p>}</div>
-                <button aria-label={`Unblock ${b.date}`} className="rounded-full p-2 text-muted hover:bg-rose-50 hover:text-ember" onClick={() => unblock({ id: b._id })}><Trash2 className="size-4" /></button>
+                <button aria-label={`Unblock ${b.date}`} className="rounded-full p-2 text-muted hover:bg-rose-50 hover:text-ember" onClick={() => unblock({ id: b._id }).then(() => toast.success(`${formatDateLong(b.date)} is open again.`), (e) => toast.error(errorMessage(e)))}><Trash2 className="size-4" /></button>
               </li>
             ))}
           </ul>

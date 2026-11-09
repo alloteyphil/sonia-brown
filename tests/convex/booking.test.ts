@@ -107,7 +107,14 @@ describe("owner dashboard", () => {
   it("blocks anyone who isn't the owner", async () => {
     const { t } = await setup();
     await expect(t.query(api.dashboard.overview, {})).rejects.toThrow(/sign in/);
-    await expect(t.withIdentity({ email: "stranger@example.com" }).query(api.dashboard.overview, {})).rejects.toThrow(/isn't allowed/);
+    await expect(t.withIdentity({ email: "stranger@example.com" }).query(api.dashboard.overview, {})).rejects.toThrow(/only owner accounts/);
+  });
+
+  it("returns null for a booking id that's malformed or from another table", async () => {
+    const { t, dinner } = await setup();
+    const sonia = t.withIdentity({ email: "sonia@example.com" });
+    expect(await sonia.query(api.dashboard.bookingDetail, { id: "not-a-real-id" })).toBeNull();
+    expect(await sonia.query(api.dashboard.bookingDetail, { id: dinner._id })).toBeNull();
   });
 
   it("lets Sonia confirm a request, record cash and see the balance", async () => {

@@ -68,7 +68,8 @@ export const fixtures: Record<string, any> = {
   "dashboard:bookingsInRange": (a: { from: string; to: string }) => ({ bookings: bookings.filter((b) => b.date >= a.from && b.date <= a.to), blockedDates: [{ date: day(20), reason: "Family wedding" }] }),
   "dashboard:listBookings": bookings,
   "dashboard:bookingDetail": (a: { id: string }) => {
-    const b = bookings.find((x) => x._id === a.id) ?? bookings[0];
+    const b = bookings.find((x) => x._id === a.id);
+    if (!b) return null;
     return { ...b, internalNotes: "Bring the cast-iron pan.", payments: b.amountPaid ? [{ _id: "p1", kind: "charge", amount: b.amountPaid, method: "mobile_money", provider: "manual", status: "succeeded", paidAt: Date.now() - 3 * 86400000, createdAt: Date.now(), note: "MoMo ref 88213" }] : [], serviceDurationMinutes: 300, business: { name: "Sonia Brown — Private Chef & Catering", phone: "+233 20 000 0000", email: "hello@soniabrown.com", serviceArea: "Greater Accra", cancellationPolicy: fallbackBusiness.cancellationPolicy } };
   },
   "admin:listClients": people.map((p, i) => ({ _id: `c${i}`, name: p[0], phone: p[1], email: p[2], bookingCount: bookings.filter((b) => b.customerId === `c${i}`).length, completedCount: 1, totalSpent: bookings.filter((b) => b.customerId === `c${i}`).reduce((s, b) => s + b.amountPaid, 0), lastBooking: null, bookings: bookings.filter((b) => b.customerId === `c${i}`) })),

@@ -12,6 +12,8 @@ const securityHeaders = [
 const preview = process.env.PREVIEW_MOCK === "1";
 
 const nextConfig: NextConfig = {
+  // Lets a phone on the same Wi-Fi use the dev server (HMR, dev assets).
+  allowedDevOrigins: ["192.168.*.*", "10.*.*.*"],
   images: { dangerouslyAllowSVG: true, contentDispositionType: "inline" },
   turbopack: {
     ...(preview && {

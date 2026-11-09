@@ -10,6 +10,7 @@ import { Badge, Card, EmptyState, Skeleton } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Field, Input, Textarea } from "@/components/ui/field";
 import { cedisToPesewas, formatMoney } from "@/lib/domain/money";
+import { toast } from "@/components/ui/toaster";
 import { errorMessage } from "@/lib/utils";
 
 type Form = { id?: Id<"services">; name: string; description: string; basePrice: string; pricePerGuest: string; minGuests: string; maxGuests: string; hours: string; sortOrder: string };
@@ -44,6 +45,7 @@ export default function ServicesAdminPage() {
         durationMinutes: Math.round(Number(form.hours) * 60),
         sortOrder: Number(form.sortOrder),
       });
+      toast.success(form.id ? `${form.name.trim()} updated.` : `${form.name.trim()} added.`);
       setForm(null);
     } catch (e) {
       setErr(errorMessage(e));
@@ -68,7 +70,7 @@ export default function ServicesAdminPage() {
                 </div>
                 <div className="flex gap-1">
                   <Button size="icon" variant="ghost" aria-label={`Edit ${s.name}`} onClick={() => { setErr(undefined); setForm(toForm(s)); }}><Pencil /></Button>
-                  <Button size="icon" variant="ghost" aria-label={s.archived ? `Restore ${s.name}` : `Archive ${s.name}`} onClick={() => archive({ id: s._id, archived: !s.archived })}>{s.archived ? <ArchiveRestore /> : <Archive />}</Button>
+                  <Button size="icon" variant="ghost" aria-label={s.archived ? `Restore ${s.name}` : `Archive ${s.name}`} onClick={() => archive({ id: s._id, archived: !s.archived }).then(() => toast.success(s.archived ? `${s.name} is bookable again.` : `${s.name} archived.`), (e) => toast.error(errorMessage(e)))}>{s.archived ? <ArchiveRestore /> : <Archive />}</Button>
                 </div>
               </div>
               <p className="mt-2 text-sm text-muted">{s.description}</p>
