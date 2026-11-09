@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" width="900" height="900">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EAF6FD"/><stop offset="1" stop-color="#7CC3EE"/></linearGradient>
+<radialGradient id="l" cx=".3" cy=".2" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+<rect width="900" height="900" fill="url(#g)"/><rect width="900" height="900" fill="url(#l)"/>
+<g fill="none" stroke="#0B2239" stroke-opacity=".55" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="330" cy="430" r="170" fill="#fff" fill-opacity=".85"/><circle cx="330" cy="430" r="122.39999999999999"/><path d="M270.5 447.0c25.5 -51.0 93.50000000000001 -51.0 118.99999999999999 0" /><circle cx="355.5" cy="399.4" r="13.6" fill="#1C6DB5" fill-opacity=".5" stroke="none"/><circle cx="296.0" cy="421.5" r="10.2" fill="#2E7D5B" fill-opacity=".5" stroke="none"/><path d="M600 300h40l-6 50q-14 10 -28 0z" fill="#fff" fill-opacity=".6"/><path d="M620 356v40M604 396h32"/></g></svg>

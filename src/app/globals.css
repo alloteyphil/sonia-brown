@@ -1,26 +1,82 @@
 @import "tailwindcss";
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/dm-sans";
 
+/* Sonia Brown brand tokens (mirrors src/brand/tokens.ts) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --night-sky: #0b2239;
+  --cloud: #f5f9fd;
+  --harbour: #1c6db5;
+  --harbour-deep: #14548c;
+  --sky: #7cc3ee;
+  --sky-mist: #ddeffb;
+  --horizon: #e2eaf2;
+  --sunlight: #f2b544;
+  --meadow: #2e7d5b;
+  --ember: #b42318;
+  --muted: #4a5d72;
+  --surface: #ffffff;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-night-sky: var(--night-sky);
+  --color-cloud: var(--cloud);
+  --color-harbour: var(--harbour);
+  --color-harbour-deep: var(--harbour-deep);
+  --color-sky: var(--sky);
+  --color-sky-mist: var(--sky-mist);
+  --color-horizon: var(--horizon);
+  --color-sunlight: var(--sunlight);
+  --color-meadow: var(--meadow);
+  --color-ember: var(--ember);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --font-display: "Fraunces Variable", Georgia, serif;
+  --font-sans: "DM Sans Variable", system-ui, sans-serif;
+  --radius-card: 1.25rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--cloud);
+  color: var(--night-sky);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.015em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--harbour);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
