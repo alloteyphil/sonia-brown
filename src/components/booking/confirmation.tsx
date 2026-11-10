@@ -3,10 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useAction, useQuery } from "convex/react";
-import { CalendarPlus, CheckCircle2, Clock3, Loader2, XCircle } from "lucide-react";
+import { CalendarPlus, CheckCircle2, Clock3, XCircle } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/card";
+import { ActionSpinner, Spinner } from "@/components/ui/spinner";
 import { formatMoney } from "@/lib/domain/money";
 import { formatDateLong, formatTime12 } from "@/lib/domain/time";
 import { whatsappLink } from "@/lib/utils";
@@ -29,7 +29,18 @@ export function Confirmation({ reference }: { reference: string }) {
     confirmPayment({ reference, token }).finally(() => setVerifyDone(true));
   }, [needsVerify, confirmPayment, reference, token]);
 
-  if (booking === undefined) return <Skeleton className="h-96" />;
+  if (booking === undefined) {
+    return (
+      <ActionSpinner
+        label={cameFromPaystack ? "Confirming your payment…" : "Loading your booking…"}
+        detail={
+          cameFromPaystack
+            ? "Paystack is verifying the charge. This only takes a moment — keep this page open."
+            : "Fetching your confirmation details."
+        }
+      />
+    );
+  }
   if (booking === null) {
     return (
       <div className="rounded-[var(--radius-card)] border border-horizon bg-white p-8 text-center">
@@ -55,7 +66,7 @@ export function Confirmation({ reference }: { reference: string }) {
     title = `Payment received, ${booking.firstName}`;
     body = "I'll confirm the details with you shortly.";
   } else if (awaitingOnline) {
-    icon = <Loader2 className="size-10 animate-spin text-harbour" strokeWidth={1.5} />;
+    icon = <Spinner className="size-10" label={verifying ? "Confirming payment" : "Waiting for payment"} />;
     title = verifying ? "Confirming your payment…" : "Waiting for your payment";
     body = "This page updates automatically as soon as Paystack confirms. Don't close it yet.";
   } else if (expired) {

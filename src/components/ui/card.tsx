@@ -15,7 +15,12 @@ export function Badge({ className, ...props }: React.HTMLAttributes<HTMLSpanElem
 }
 
 export function Skeleton({ className }: { className?: string }) {
-  return <div className={cn("animate-pulse rounded-xl bg-horizon/70", className)} />;
+  return (
+    <div
+      aria-hidden
+      className={cn("skeleton-block rounded-xl bg-horizon/80", className)}
+    />
+  );
 }
 
 export function EmptyState({

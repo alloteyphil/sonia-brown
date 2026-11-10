@@ -110,6 +110,34 @@ body {
   animation: fade 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Soft skeleton shimmer — pulse alone looks flat on large blocks. */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.skeleton-block {
+  background-image: linear-gradient(
+    105deg,
+    transparent 40%,
+    color-mix(in srgb, var(--cloud) 55%, transparent) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.35s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block {
+    animation: none;
+    background-image: none;
+  }
+}
+
 /* Anything Sonia would hand you on paper (a menu, a booking slip) is a white
    card with a thin sky-blue line set in from the edge, like the rim of a plate. */
 .menu-card {

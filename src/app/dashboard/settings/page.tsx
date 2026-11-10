@@ -6,16 +6,17 @@ import type { FunctionArgs } from "convex/server";
 import { api } from "../../../../convex/_generated/api";
 import { PageTitle } from "@/components/dashboard/shell";
 import { Button } from "@/components/ui/button";
-import { Card, Skeleton } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Field, Input, Textarea } from "@/components/ui/field";
 import { toast } from "@/components/ui/toaster";
+import { DashboardFormSkeleton } from "@/components/dashboard/skeletons";
 import { errorMessage } from "@/lib/utils";
 
 type S = FunctionArgs<typeof api.admin.saveSettings>;
 
 export default function SettingsPage() {
   const data = useQuery(api.admin.getSettingsForOwner);
-  if (!data) return <Skeleton className="h-[600px]" />;
+  if (!data) return <DashboardFormSkeleton />;
   return <SettingsForm initial={data} />;
 }
 

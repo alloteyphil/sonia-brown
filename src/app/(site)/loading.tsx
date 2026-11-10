@@ -1,5 +1,5 @@
-import { PageSpinner } from "@/components/ui/spinner";
+import { HomeHeroSkeleton } from "@/components/site/skeletons";
 
 export default function SiteLoading() {
-  return <PageSpinner />;
+  return <HomeHeroSkeleton />;
 }

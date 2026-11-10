@@ -5,8 +5,9 @@ import { AlertTriangle, CalendarCheck, Inbox, TrendingUp, Wallet } from "lucide-
 import { api } from "../../../convex/_generated/api";
 import { PageTitle } from "@/components/dashboard/shell";
 import { BookingRow } from "@/components/dashboard/booking-row";
-import { Card, EmptyState, Skeleton } from "@/components/ui/card";
+import { Card, EmptyState } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { DashboardPanelSkeleton } from "@/components/dashboard/skeletons";
 import { formatMoney } from "@/lib/domain/money";
 import { formatDateLong, todayInAccra } from "@/lib/domain/time";
 
@@ -22,15 +23,7 @@ function Stat({ label, value, icon: Icon, href }: { label: string; value: string
 
 export default function OverviewPage() {
   const data = useQuery(api.dashboard.overview);
-  if (!data) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-10 w-64" />
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-28" />)}</div>
-        <Skeleton className="h-64" />
-      </div>
-    );
-  }
+  if (!data) return <DashboardPanelSkeleton />;
   const { stats } = data;
   return (
     <>

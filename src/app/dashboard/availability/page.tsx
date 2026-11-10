@@ -6,8 +6,9 @@ import { Ban, Loader2, Trash2 } from "lucide-react";
 import { api } from "../../../../convex/_generated/api";
 import { PageTitle } from "@/components/dashboard/shell";
 import { Button } from "@/components/ui/button";
-import { Card, Skeleton } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Field, Input } from "@/components/ui/field";
+import { DashboardFormSkeleton } from "@/components/dashboard/skeletons";
 import { formatDateLong, todayInAccra } from "@/lib/domain/time";
 import { toast } from "@/components/ui/toaster";
 import { errorMessage } from "@/lib/utils";
@@ -19,7 +20,7 @@ type AvailabilityData = NonNullable<FunctionReturnType<typeof api.admin.getAvail
 
 export default function AvailabilityPage() {
   const data = useQuery(api.admin.getAvailability);
-  if (!data) return <Skeleton className="h-[600px]" />;
+  if (!data) return <DashboardFormSkeleton />;
   return <AvailabilityForm data={data} />;
 }
 

@@ -10,7 +10,7 @@ import { api } from "../../../../../convex/_generated/api";
 import type { BookingDetail } from "@/components/dashboard/types";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { PageSpinner } from "@/components/ui/spinner";
+import { DashboardFormSkeleton } from "@/components/dashboard/skeletons";
 import { toast } from "@/components/ui/toaster";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
@@ -40,7 +40,7 @@ const methodLabel: Record<string, string> = { card: "Card", mobile_money: "Mobil
 export default function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const booking = useQuery(api.dashboard.bookingDetail, { id });
-  if (booking === undefined) return <PageSpinner label="Loading booking" />;
+  if (booking === undefined) return <DashboardFormSkeleton />;
   if (booking === null) notFound();
   return <Detail b={booking} />;
 }

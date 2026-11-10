@@ -6,7 +6,8 @@ import { useQuery } from "convex/react";
 import { ArrowDownUp, Search } from "lucide-react";
 import { api } from "../../../../convex/_generated/api";
 import { PageTitle } from "@/components/dashboard/shell";
-import { Card, EmptyState, Skeleton } from "@/components/ui/card";
+import { Card, EmptyState } from "@/components/ui/card";
+import { DashboardTableSkeleton } from "@/components/dashboard/skeletons";
 import { Input, Select } from "@/components/ui/field";
 import { StatusBadge, PaymentBadge } from "@/components/ui/status-badge";
 import { formatMoney } from "@/lib/domain/money";
@@ -95,7 +96,7 @@ function BookingsList() {
       </Card>
 
       {!rows ? (
-        <Skeleton className="h-96" />
+        <DashboardTableSkeleton />
       ) : filtered.length === 0 ? (
         <EmptyState title={rows.length === 0 ? "No bookings yet" : "No matches"} body={rows.length === 0 ? "When clients book, they'll appear here instantly." : "Try clearing a filter."} />
       ) : (
@@ -139,7 +140,7 @@ function BookingsList() {
 
 export default function BookingsPage() {
   return (
-    <Suspense fallback={<Skeleton className="h-96" />}>
+    <Suspense fallback={<DashboardTableSkeleton />}>
       <BookingsList />
     </Suspense>
   );

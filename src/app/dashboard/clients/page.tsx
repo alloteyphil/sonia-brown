@@ -5,9 +5,10 @@ import { useQuery } from "convex/react";
 import { MessageCircle, Phone, Search } from "lucide-react";
 import { api } from "../../../../convex/_generated/api";
 import { PageTitle } from "@/components/dashboard/shell";
-import { Card, EmptyState, Skeleton } from "@/components/ui/card";
+import { Card, EmptyState } from "@/components/ui/card";
 import { Input } from "@/components/ui/field";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { DashboardTableSkeleton } from "@/components/dashboard/skeletons";
 import { formatMoney } from "@/lib/domain/money";
 import { formatDateShort } from "@/lib/domain/time";
 import { whatsappLink } from "@/lib/utils";
@@ -29,7 +30,7 @@ export default function ClientsPage() {
         <Search className="absolute left-3 top-3.5 size-4 text-muted" />
         <Input className="pl-9" placeholder="Search by name, phone or email" value={q} onChange={(e) => setQ(e.target.value)} />
       </label>
-      {!clients ? <Skeleton className="h-96" /> : list.length === 0 ? (
+      {!clients ? <DashboardTableSkeleton /> : list.length === 0 ? (
         <EmptyState title={clients.length ? "No matches" : "No clients yet"} body="Clients are added automatically when they book." />
       ) : (
         <Card className="divide-y divide-horizon">

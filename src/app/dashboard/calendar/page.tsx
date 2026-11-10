@@ -11,7 +11,8 @@ import { PageTitle } from "@/components/dashboard/shell";
 import { BookingRow } from "@/components/dashboard/booking-row";
 import type { DashBooking } from "@/components/dashboard/types";
 import { Button } from "@/components/ui/button";
-import { Card, EmptyState, Skeleton } from "@/components/ui/card";
+import { Card, EmptyState } from "@/components/ui/card";
+import { DashboardPanelSkeleton } from "@/components/dashboard/skeletons";
 import { formatDateLong, formatTime12, todayInAccra } from "@/lib/domain/time";
 import { cn } from "@/lib/utils";
 
@@ -95,7 +96,7 @@ export default function CalendarPage() {
       </div>
 
       {!data ? (
-        <Skeleton className="h-[520px]" />
+        <DashboardPanelSkeleton label="Loading calendar" />
       ) : view === "list" ? (
         data.bookings.length === 0 ? (
           <EmptyState title="Nothing in the next 60 days" body="New bookings show up here in real time." />

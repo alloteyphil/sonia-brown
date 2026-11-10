@@ -19,7 +19,16 @@ export default async function BookPage() {
       <h1 className="text-4xl leading-[1.1] sm:text-5xl">Let&apos;s get your date in the diary</h1>
       <div className="mt-10">
         {configured ? (
-          <Suspense fallback={<Skeleton className="h-96" />}>
+          <Suspense
+            fallback={
+              <div className="grid gap-4 sm:grid-cols-3" role="status" aria-live="polite" aria-busy="true">
+                <span className="sr-only">Loading booking options</span>
+                <Skeleton className="h-36" />
+                <Skeleton className="h-36" />
+                <Skeleton className="h-36" />
+              </div>
+            }
+          >
             <BookingWizard />
           </Suspense>
         ) : (

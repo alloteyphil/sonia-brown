@@ -6,12 +6,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
 import { addDays, parse, startOfMonth } from "date-fns";
-import { ArrowLeft, ArrowRight, Check, Loader2, Lock } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Lock } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/field";
 import { Skeleton } from "@/components/ui/card";
+import { ActionSpinner, Spinner } from "@/components/ui/spinner";
 import { MonthCalendar } from "./month-calendar";
 import { bookingDetailsSchema } from "@/lib/domain/validation";
 import { computeQuote, PricingError } from "@/lib/domain/pricing";
@@ -85,10 +86,14 @@ export function BookingWizard() {
 
   if (services === undefined) {
     return (
-      <div className="space-y-4">
-        <Skeleton className="h-10 w-2/3" />
-        <Skeleton className="h-40" />
-        <Skeleton className="h-40" />
+      <div className="space-y-4" role="status" aria-live="polite" aria-busy="true">
+        <span className="sr-only">Loading services</span>
+        <Skeleton className="h-4 w-40" />
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Skeleton className="h-36" />
+          <Skeleton className="h-36" />
+          <Skeleton className="h-36" />
+        </div>
       </div>
     );
   }
@@ -166,7 +171,18 @@ export function BookingWizard() {
         </ol>
         <p className="sr-only" aria-live="polite">Step {currentStep + 1} of 4: {STEPS[currentStep]}</p>
 
-        {currentStep === 0 && (
+        {submitting && (
+          <ActionSpinner
+            label={payment === "later" ? "Sending your booking request…" : "Opening secure payment…"}
+            detail={
+              payment === "later"
+                ? "I'm locking in your request. You'll get a confirmation on the next screen."
+                : "Hold on — Paystack will open so you can pay by card or mobile money."
+            }
+          />
+        )}
+
+        {!submitting && currentStep === 0 && (
           <section>
             <h2 className="text-3xl">What would you like me to cook?</h2>
             <div className="mt-6 grid gap-4">
@@ -203,7 +219,7 @@ export function BookingWizard() {
           </section>
         )}
 
-        {currentStep === 1 && service && (
+        {!submitting && currentStep === 1 && service && (
           <section>
             <h2 className="text-3xl">Pick a date and time</h2>
             <p className="mt-1 text-muted">Showing dates I&apos;m free for a {service.name.toLowerCase()} ({service.durationMinutes / 60} hours).</p>
@@ -263,7 +279,7 @@ export function BookingWizard() {
           </section>
         )}
 
-        {currentStep === 2 && service && (
+        {!submitting && currentStep === 2 && service && (
           <form onSubmit={onDetails} noValidate>
             <h2 className="text-3xl">Tell me about your event</h2>
             <div className="mt-6 grid gap-5 rounded-[var(--radius-card)] border border-horizon bg-white p-5 sm:grid-cols-2 sm:p-6">
@@ -300,7 +316,7 @@ export function BookingWizard() {
           </form>
         )}
 
-        {currentStep === 3 && service && date && time && details && quote && (
+        {!submitting && currentStep === 3 && service && date && time && details && quote && (
           <section>
             <h2 className="text-3xl">Review and pay</h2>
             <div className="mt-6 rounded-[var(--radius-card)] border border-horizon bg-white p-5 sm:p-6">
@@ -359,7 +375,7 @@ export function BookingWizard() {
             <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
               <Button variant="ghost" onClick={() => go(2)} disabled={submitting}><ArrowLeft />Back</Button>
               <Button size="lg" onClick={submit} disabled={submitting || !time}>
-                {submitting ? <Loader2 className="animate-spin" /> : payment === "later" ? <Check /> : <Lock />}
+                {submitting ? <Spinner className="size-4" label="Submitting" /> : payment === "later" ? <Check /> : <Lock />}
                 {payment === "later" ? "Send booking request" : `Pay ${formatMoney(payment === "full" ? quote.total : quote.depositDue)} securely`}
               </Button>
             </div>

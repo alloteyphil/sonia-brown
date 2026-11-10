@@ -1,5 +1,5 @@
-import { PageSpinner } from "@/components/ui/spinner";
+import { DashboardPanelSkeleton } from "@/components/dashboard/skeletons";
 
 export default function DashboardLoading() {
-  return <PageSpinner />;
+  return <DashboardPanelSkeleton />;
 }

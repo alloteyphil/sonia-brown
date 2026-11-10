@@ -6,7 +6,8 @@ import { api } from "../../../../convex/_generated/api";
 import type { Doc, Id } from "../../../../convex/_generated/dataModel";
 import { PageTitle } from "@/components/dashboard/shell";
 import { Button } from "@/components/ui/button";
-import { Badge, Card, EmptyState, Skeleton } from "@/components/ui/card";
+import { Badge, Card, EmptyState } from "@/components/ui/card";
+import { DashboardTableSkeleton } from "@/components/dashboard/skeletons";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Field, Input, Textarea } from "@/components/ui/field";
 import { cedisToPesewas, formatMoney } from "@/lib/domain/money";
@@ -57,7 +58,7 @@ export default function ServicesAdminPage() {
   return (
     <>
       <PageTitle title="Services & pricing" subtitle="What clients can book, and what it costs." actions={<Button onClick={() => { setErr(undefined); setForm({ ...empty }); }}><Plus />New service</Button>} />
-      {!services ? <Skeleton className="h-80" /> : services.length === 0 ? (
+      {!services ? <DashboardTableSkeleton rows={4} /> : services.length === 0 ? (
         <EmptyState title="No services yet" body="Add your first service so clients can book." action={<Button onClick={() => setForm({ ...empty })}><Plus />New service</Button>} />
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
