@@ -42,17 +42,17 @@ export default async function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* Hero: the words on linen, the food running off the right edge of the screen. */}
-      <section className="grid lg:grid-cols-[1.15fr_1fr]">
-        <div className="enter flex flex-col justify-center px-5 pb-12 pt-10 sm:px-8 sm:pt-16 lg:py-20 lg:pl-[max(2rem,calc((100vw-72rem)/2+2rem))] lg:pr-10">
-          <h1 className="text-balance text-[2.5rem] leading-[1.06] sm:text-[3.5rem]">
+      {/* Hero: food full-bleed on the right from tablet up; image leads on phones. */}
+      <section className="grid md:min-h-[min(calc(100dvh-4rem),40rem)] md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+        <div className="enter order-2 flex flex-col justify-center px-5 pb-12 pt-8 sm:px-8 md:order-1 md:py-14 md:pl-[max(1.25rem,calc((100vw-72rem)/2+1.25rem))] md:pr-10 lg:pl-[max(2rem,calc((100vw-72rem)/2+2rem))]">
+          <h1 className="max-w-[18ch] text-[2.35rem] leading-[1.06] text-night-sky sm:text-[3.25rem] lg:text-[3.5rem]">
             Ghanaian and soul food, cooked at your table
           </h1>
-          <p className="mt-6 max-w-[34rem] text-lg text-muted sm:text-xl">
-            I&apos;m Sonia, a private chef in {info.serviceArea}. I shop, cook in your kitchen, serve and clean up, for
+          <p className="mt-5 max-w-[34rem] text-lg text-muted sm:mt-6 sm:text-xl">
+            I&apos;m Sonia, a private chef in {info.serviceArea.trim()}. I shop, cook in your kitchen, serve and clean up, for
             private dinners, weekly meal prep and events.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-7 flex flex-wrap gap-3 sm:mt-8">
             <Button asChild size="lg">
               <Link href="/book">Book Sonia</Link>
             </Button>
@@ -60,12 +60,19 @@ export default async function HomePage() {
               <Link href="/services">See menus and prices</Link>
             </Button>
           </div>
-          <p className="mt-6 text-[15px] text-muted">
+          <p className="mt-5 text-[15px] text-muted sm:mt-6">
             Ingredients and cleanup included. Book with {info.leadTimeHours} hours&apos; notice and pay by MoMo or card.
           </p>
         </div>
-        <div className="relative aspect-[4/3] bg-raised lg:aspect-auto lg:min-h-[min(calc(100dvh-4rem),47.5rem)]">
-          <Image src={images.hero.src} alt={images.hero.alt} fill preload sizes="(min-width: 1024px) 47vw, 100vw" className="object-cover" />
+        <div className="relative order-1 aspect-[5/4] bg-raised sm:aspect-[4/3] md:order-2 md:aspect-auto md:h-full md:min-h-[22rem]">
+          <Image
+            src={images.hero.src}
+            alt={images.hero.alt}
+            fill
+            preload
+            sizes="(min-width: 768px) 48vw, 100vw"
+            className="object-cover object-[center_40%]"
+          />
         </div>
       </section>
 

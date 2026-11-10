@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { Menu, X } from "lucide-react";
 import { Wordmark } from "./logo";
+import { scrollToId } from "./hash-scroll";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +14,15 @@ const nav = [
   { href: "/#faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
 ];
+
+function scrollToHash(hash: string) {
+  window.history.pushState(null, "", `/#${hash}`);
+  scrollToId(hash, "instant");
+  // Retries cover fonts/images and the mobile drawer unmounting after close.
+  for (const ms of [120, 320, 600]) {
+    window.setTimeout(() => scrollToId(hash, "instant"), ms);
+  }
+}
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -25,6 +35,25 @@ export function SiteHeader() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  function onNavClick(e: MouseEvent<HTMLAnchorElement>, href: string) {
+    const hash = href.includes("#") ? href.split("#")[1] : "";
+    if (!hash) {
+      setOpen(false);
+      return;
+    }
+    const path = href.split("#")[0] || "/";
+    // Already on home: Next Link won't scroll to the hash, so we do it.
+    // Close the mobile drawer first — scrolling while it's open measures the
+    // wrong Y, then the drawer unmounts and FAQ ends up above the viewport.
+    if (pathname === path) {
+      e.preventDefault();
+      setOpen(false);
+      window.setTimeout(() => scrollToHash(hash), 180);
+    } else {
+      setOpen(false);
+    }
+  }
 
   return (
     <header
@@ -42,6 +71,7 @@ export function SiteHeader() {
             <Link
               key={n.href}
               href={n.href}
+              onClick={(e) => onNavClick(e, n.href)}
               aria-current={pathname === n.href ? "page" : undefined}
               className={cn(
                 "py-2 text-[15px] text-night-sky/70 underline-offset-8 transition-colors hover:text-night-sky",
@@ -74,7 +104,7 @@ export function SiteHeader() {
           <ul className="divide-y divide-horizon">
             {nav.map((n) => (
               <li key={n.href}>
-                <Link href={n.href} onClick={() => setOpen(false)} className="block py-4 text-lg">
+                <Link href={n.href} onClick={(e) => onNavClick(e, n.href)} className="block py-4 text-lg">
                   {n.label}
                 </Link>
               </li>

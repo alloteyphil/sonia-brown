@@ -15,12 +15,23 @@ export async function getServices(): Promise<PublicService[]> {
   }
 }
 
+function cleanBusiness(info: BusinessInfo): BusinessInfo {
+  return {
+    ...info,
+    serviceArea: info.serviceArea.trim(),
+    phone: info.phone.trim(),
+    email: info.email.trim(),
+    whatsapp: info.whatsapp.trim(),
+    instagram: info.instagram?.replace(/^@/, "").trim() || undefined,
+  };
+}
+
 export async function getBusinessInfo(): Promise<BusinessInfo> {
-  if (!configured) return fallbackBusiness;
+  if (!configured) return cleanBusiness(fallbackBusiness);
   try {
-    return await fetchQuery(api.public.businessInfo, {});
+    return cleanBusiness(await fetchQuery(api.public.businessInfo, {}));
   } catch {
-    return fallbackBusiness;
+    return cleanBusiness(fallbackBusiness);
   }
 }
 

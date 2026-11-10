@@ -63,7 +63,10 @@ export function ServiceList({ services }: { services: PublicService[] }) {
                 </span>
               </p>
               <Button asChild variant="outline" size="sm">
-                <Link href={`/book?service=${service.slug}`} aria-label={`Book a ${service.name.toLowerCase()}`}>
+                <Link
+                  href={`/book?service=${service.slug}`}
+                  aria-label={`Book ${/^[aeiou]/i.test(service.name) ? "an" : "a"} ${service.name.toLowerCase()}`}
+                >
                   Book this
                 </Link>
               </Button>
